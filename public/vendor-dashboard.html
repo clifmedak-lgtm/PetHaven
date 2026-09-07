@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breeder Management Hub | PetHaven</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .v-nav-btn.active {
+            background: #10B981;
+            color: white;
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
+        }
+
+        .v-nav-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+
+<body data-page="vendor" class="bg-gray-50 text-slate-900 overflow-x-hidden">
+    <!-- Top Mobile Header -->
+    <div
+        class="md:hidden flex items-center justify-between bg-white border-b border-gray-100 px-6 py-4 sticky top-0 z-[100]">
+        <h1 class="text-xl font-black text-emerald-600">Breeder Hub</h1>
+        <button id="v-mobile-toggle" class="p-3 bg-gray-100 rounded-xl">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        </button>
+    </div>
+
+    <div class="flex min-h-screen">
+        <!-- Enterprise Sidebar -->
+        <aside id="v-sidebar"
+            class="fixed inset-y-0 left-0 z-[200] w-80 bg-white border-r border-gray-100 p-10 transform -translate-x-full transition-transform duration-500 md:static md:translate-x-0 flex flex-col justify-between">
+            <div class="space-y-12">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-black text-xl italic">
+                        P</div>
+                    <span class="text-2xl font-black tracking-tighter">PetHaven</span>
+                </div>
+                <nav class="space-y-3">
+                    <button onclick="switchView('stats')"
+                        class="v-nav-btn active w-full text-left px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-4">
+                        <span>📊</span> Performance
+                    </button>
+                    <button onclick="switchView('products')"
+                        class="v-nav-btn w-full text-left px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-4">
+                        <span>🐶</span> Inventory
+                    </button>
+                    <button onclick="switchView('orders')"
+                        class="v-nav-btn w-full text-left px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-4">
+                        <span>🧾</span> Sales Tracking
+                    </button>
+                </nav>
+            </div>
+            <div class="space-y-6 pt-10 border-t">
+                <button onclick="logout()"
+                    class="w-full px-6 py-4 rounded-2xl bg-rose-50 text-rose-500 font-black text-sm uppercase tracking-widest flex items-center gap-4 hover:bg-rose-500 hover:text-white transition-all">
+                    <span>🔓</span> Terminate
+                </button>
+            </div>
+        </aside>
+
+        <!-- Dynamic Content Engine -->
+        <main class="flex-1 p-8 lg:p-16">
+            <!-- View: Performance Stats -->
+            <div id="view-stats" class="animate-fade-in">
+                <div class="mb-16">
+                    <h1 class="text-5xl font-black tracking-tighter leading-none mb-3">Enterprise Dashboard</h1>
+                    <p class="text-slate-400 font-bold uppercase text-[10px] tracking-[0.5em]">Real-Time Breeder
+                        Analytics</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
+                        <p class="text-slate-400 font-black uppercase text-[10px] tracking-widest mb-4">Total Revenue
+                            Generated</p>
+                        <p id="stat-revenue" class="text-4xl font-black tracking-tighter text-slate-900">0 CFA</p>
+                        <div class="h-1 w-12 bg-emerald-500 rounded-full mt-6"></div>
+                    </div>
+                    <div
+                        class="bg-emerald-600 p-10 rounded-[3rem] shadow-[0_30px_60px_rgba(16,185,129,0.2)] text-white">
+                        <p class="text-emerald-100 font-black uppercase text-[10px] tracking-widest mb-4">Current Payout
+                            Balance</p>
+                        <p id="stat-balance" class="text-4xl font-black tracking-tighter">0 CFA</p>
+                        <p class="text-[9px] font-bold mt-6 opacity-60 uppercase tracking-widest">Net Share After
+                            Commission</p>
+                    </div>
+                    <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
+                        <p class="text-slate-400 font-black uppercase text-[10px] tracking-widest mb-4">Active
+                            Acquisitions</p>
+                        <p id="stat-orders" class="text-4xl font-black tracking-tighter text-slate-900">0</p>
+                        <div class="h-1 w-12 bg-amber-500 rounded-full mt-6"></div>
+                    </div>
+                </div>
+
+                <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
+                        <h3 class="text-xl font-black mb-8 border-b pb-6">Payment Configuration</h3>
+                        <div class="space-y-6">
+                            <select id="momo-provider"
+                                class="w-full p-5 bg-slate-50 border-none rounded-2xl font-bold outline-none focus:ring-4 focus:ring-emerald-500/10">
+                                <option value="MTN">MTN Mobile Money</option>
+                                <option value="ORANGE">Orange Money</option>
+                            </select>
+                            <input type="tel" id="momo-phone" placeholder="+237 Mobile Number"
+                                class="w-full p-5 bg-slate-50 border-none rounded-2xl font-bold outline-none focus:ring-4 focus:ring-emerald-500/10">
+                            <button onclick="saveMomoInfo()"
+                                class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-emerald-600 transition-all">Update
+                                Recipient Node</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden">
+                        <h3 class="text-xl font-black mb-8 border-b pb-6">Logistics Activity</h3>
+                        <div id="recent-orders-list" class="space-y-4 max-h-[300px] overflow-y-auto no-scrollbar">
+                            <p class="text-slate-300 font-bold py-10 text-center uppercase tracking-widest text-xs">No
+                                Recent Sales Node</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View: Inventory Control -->
+            <div id="view-products" class="hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-12">
+                    <h2 class="text-4xl font-black tracking-tighter">My Inventory</h2>
+                    <button onclick="toggleProductModal(true)"
+                        class="bg-emerald-600 text-white px-10 py-4 rounded-[2rem] font-black shadow-xl shadow-emerald-200 hover:scale-105 active:scale-95 transition-all">
+                        + Deploy New Pet
+                    </button>
+                </div>
+                <div id="v-products-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Cards load here -->
+                </div>
+            </div>
+
+            <!-- View: Orders Interface -->
+            <div id="view-orders" class="hidden animate-fade-in">
+                <h2 class="text-4xl font-black tracking-tighter mb-12 italic">Transaction Matrix</h2>
+                <div id="v-orders-full-list" class="space-y-6"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- The Product Deployment Modal (Bulky Form) -->
+    <div id="product-modal"
+        class="hidden fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+        <div class="bg-white w-full max-w-4xl rounded-[4rem] p-12 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-4xl font-black tracking-tighter">New Pet Deployment</h2>
+                <button onclick="toggleProductModal(false)"
+                    class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center font-black hover:bg-rose-50 hover:text-rose-500 transition-all">✕</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Image Sub-Module -->
+                <div class="space-y-6">
+                    <div
+                        class="relative group aspect-square bg-slate-50 border-4 border-dashed border-emerald-100 rounded-[3rem] overflow-hidden flex items-center justify-center">
+                        <img id="modal-p-preview" class="hidden w-full h-full object-cover">
+                        <div id="modal-p-placeholder" class="text-center p-10">
+                            <span class="text-6xl mb-4 block">📸</span>
+                            <p class="text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-none">
+                                Pet Visualization Required</p>
+                        </div>
+                        <input type="file" id="modal-p-file" accept="image/*"
+                            class="absolute inset-0 opacity-0 cursor-pointer">
+                    </div>
+                    <p id="modal-p-status"
+                        class="text-center font-black text-[10px] text-slate-400 uppercase tracking-[0.2em]"></p>
+                </div>
+
+                <!-- Attributes Sub-Module -->
+                <div class="space-y-6">
+                    <input type="text" id="modal-p-name" placeholder="Full Breed / Item Name"
+                        class="w-full p-6 bg-slate-50 border-none rounded-3xl text-xl font-bold outline-none focus:ring-4 focus:ring-emerald-500/10">
+                    <div class="grid grid-cols-2 gap-4">
+                        <select id="modal-p-category"
+                            class="p-6 bg-slate-50 border-none rounded-3xl font-black uppercase text-xs tracking-widest outline-none">
+                            <option value="dogs">Dogs / Puppies</option>
+                            <option value="cats">Cats / Kittens</option>
+                            <option value="birds">Birds</option>
+                            <option value="food">Nutrition</option>
+                            <option value="accessories">Equipment</option>
+                        </select>
+                        <input type="text" id="modal-p-breed" placeholder="Specific Breed"
+                            class="p-6 bg-slate-50 border-none rounded-3xl font-bold outline-none">
+                    </div>
+                    <textarea id="modal-p-desc"
+                        placeholder="Comprehensive health history, vaccinations, behavior, and personality traits..."
+                        class="w-full p-6 bg-slate-50 border-none rounded-3xl h-48 outline-none focus:ring-4 focus:ring-emerald-500/10 text-lg"></textarea>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Market
+                                Price (CFA)</label>
+                            <input type="number" id="modal-p-price"
+                                class="w-full p-6 bg-slate-50 border-none rounded-3xl font-black text-2xl text-emerald-600 outline-none">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Units in
+                                Inventory</label>
+                            <input type="number" id="modal-p-stock" value="1"
+                                class="w-full p-6 bg-slate-50 border-none rounded-3xl font-black text-2xl outline-none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 flex gap-6">
+                <button onclick="executeProductListing()"
+                    class="flex-1 bg-emerald-600 text-white py-7 rounded-[2.5rem] font-black text-2xl shadow-2xl shadow-emerald-200 hover:scale-[1.02] transition-all">
+                    Finalize Deployment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        let currentUploadUrl = "";
+        function switchView(view) {
+            document.querySelectorAll('#view-stats, #view-products, #view-orders').forEach(v => v.classList.add('hidden'));
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+        }
+
+        document.getElementById('modal-p-file').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            const status = document.getElementById('modal-p-status');
+            status.textContent = "Processing Bio-Image Data...";
+            try {
+                currentUploadUrl = await uploadPetImage(file); // From app.js
+                const preview = document.getElementById('modal-p-preview');
+                preview.src = currentUploadUrl;
+                preview.classList.remove('hidden');
+                document.getElementById('modal-p-placeholder').classList.add('hidden');
+                status.textContent = "Data Ready ✓";
+                status.className = "text-center font-black text-[10px] text-emerald-500 uppercase tracking-[0.2em]";
+            } catch (err) { status.textContent = "Logic Fault during Upload"; }
+        });
+
+        async function executeProductListing() {
+            const data = {
+                name: document.getElementById('modal-p-name').value,
+                category: document.getElementById('modal-p-category').value,
+                breed: document.getElementById('modal-p-breed').value,
+                description: document.getElementById('modal-p-desc').value,
+                price: document.getElementById('modal-p-price').value,
+                stock: document.getElementById('modal-p-stock').value,
+                image: currentUploadUrl
+            };
+            if (!data.image) return alert("Pet Image Data Required.");
+            await performPetHavenRequest('/api/vendor/products', { method: 'POST', body: JSON.stringify(data) });
+            location.reload();
+        }
+    </script>
+</body>
+
+</html>

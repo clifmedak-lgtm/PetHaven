@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "checkJs": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

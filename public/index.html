@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetHaven | The Premium Pet Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body data-page="index" class="bg-slate-50 font-sans">
+    <header class="bg-white border-b sticky top-0 z-50 h-20 flex items-center shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 w-full flex justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">🐾</span>
+                <a href="index.html" class="text-3xl font-black text-emerald-600">PetHaven</a>
+                <button id="mobile-menu-button" class="md:hidden ml-4">☰</button>
+            </div>
+            <div class="hidden md:flex gap-8 items-center font-bold text-slate-600">
+                <a href="#products">Animals</a>
+                <a href="#featured">Deals</a>
+                <a href="account.html">Account</a>
+                <button class="open-vendor-modal bg-slate-900 text-white px-4 py-2 rounded-xl">Breeder Portal</button>
+            </div>
+            <button id="cart-open-button" class="relative text-2xl">🛒 <span id="cart-count"
+                    class="absolute -top-2 -right-2 bg-rose-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold border-2 border-white">0</span></button>
+        </div>
+    </header>
+
+    <!-- FLASH SALE WITH TIMER -->
+    <section id="featured" class="bg-rose-50 py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center mb-10">
+                <div class="flex items-center gap-4">
+                    <h3 class="text-3xl font-black text-rose-600 tracking-tighter">⚡ Flash Sales</h3>
+                    <div class="flex gap-2 text-white font-black"><span id="flash-hours"
+                            class="bg-slate-900 px-3 py-1 rounded-lg">00</span>:<span id="flash-minutes"
+                            class="bg-slate-900 px-3 py-1 rounded-lg">00</span>:<span id="flash-seconds"
+                            class="bg-rose-600 px-3 py-1 rounded-lg animate-pulse">00</span></div>
+                </div>
+            </div>
+            <div id="flash-sale-list" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- MAIN PRODUCT SECTION -->
+    <main class="max-w-7xl mx-auto px-4 py-16">
+        <div id="search-panel"
+            class="mb-12 bg-white p-10 rounded-[3rem] shadow-sm border flex flex-col md:flex-row gap-8 items-center">
+            <div class="flex-1 w-full">
+                <h2 class="font-black text-xl mb-4 uppercase text-slate-400 text-xs tracking-widest">Search Engine</h2>
+                <input id="search-input" type="search" placeholder="Search breeds, foods, shops..."
+                    class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-4 focus:ring-emerald-500/10 outline-none">
+            </div>
+            <div class="flex gap-4">
+                <input id="price-min-input" type="number" placeholder="Min" class="p-4 bg-slate-50 rounded-2xl w-24">
+                <input id="price-max-input" type="number" placeholder="Max" class="p-4 bg-slate-50 rounded-2xl w-24">
+            </div>
+        </div>
+        <div class="flex gap-2 mb-10 overflow-x-auto pb-2 font-bold no-scrollbar">
+            <button data-category="all"
+                class="category-filter bg-emerald-600 text-white px-8 py-3 rounded-full shadow-lg">All</button>
+            <button data-category="dogs" class="category-filter bg-white border px-8 py-3 rounded-full">Puppies</button>
+            <button data-category="cats" class="category-filter bg-white border px-8 py-3 rounded-full">Kittens</button>
+            <button data-category="food"
+                class="category-filter bg-white border px-8 py-3 rounded-full">Nutrition</button>
+        </div>
+        <div id="products-list" class="grid grid-cols-1 md:grid-cols-4 gap-10"></div>
+    </main>
+
+    <!-- FULL 4-COLUMN FOOTER -->
+    <footer id="footer" class="bg-slate-900 text-slate-400 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+            <div>
+                <h1 class="text-white text-3xl font-black mb-4 tracking-tighter">PetHaven</h1>
+                <p>Verified breeders connecting with loving homes.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 uppercase text-xs tracking-widest">Support</h4>
+                <ul class="space-y-4">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Health Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 uppercase text-xs tracking-widest">Breeder</h4>
+                <ul class="space-y-4">
+                    <li><button class="open-vendor-modal">Breeder Login</button></li>
+                    <li><a href="admin.html">Admin</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 uppercase text-xs tracking-widest">Legal</h4>
+                <ul class="space-y-4">
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- VENDOR MODAL -->
+    <div id="vendor-modal"
+        class="hidden fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+        <div class="bg-white w-full max-w-lg rounded-[3rem] p-10 shadow-2xl">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black">Breeder Access</h2><button id="close-vendor-modal">✕</button>
+            </div>
+            <form id="vendor-signin-form" class="space-y-4">
+                <input type="email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-2xl outline-none">
+                <input type="password" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-2xl outline-none">
+                <button type="submit"
+                    class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black text-xl shadow-xl shadow-emerald-200">Sign
+                    In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CART DRAWER -->
+    <aside id="cart-drawer"
+        class="fixed inset-y-0 right-0 z-[2000] hidden w-full max-w-md bg-white shadow-2xl border-l flex flex-col">
+        <div class="p-10 flex items-center justify-between border-b">
+            <h2 class="text-2xl font-black">Pet Basket</h2><button id="close-cart-drawer">✕</button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-10 space-y-6"></div>
+        <div class="p-10 border-t">
+            <div class="flex justify-between mb-8"><span
+                    class="text-slate-400 font-bold uppercase text-xs">Total</span><span id="cart-total"
+                    class="text-3xl font-black text-emerald-600">0 CFA</span></div><button
+                onclick="window.location.href='checkout.html'"
+                class="w-full bg-emerald-600 text-white py-5 rounded-[2rem] font-black text-xl shadow-xl shadow-emerald-100">Checkout</button>
+        </div>
+    </aside>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

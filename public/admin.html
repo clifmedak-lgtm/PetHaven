@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PetHaven Master Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 text-white font-sans">
+    <div class="min-h-screen flex">
+        <aside class="w-72 bg-black/40 border-r border-white/10 p-10 flex flex-col justify-between">
+            <div>
+                <h1 class="text-2xl font-black text-emerald-400 mb-12">PetHaven Admin</h1>
+                <nav class="space-y-6 text-slate-400 font-bold">
+                    <button onclick="loadSection('dashboard')" class="block hover:text-white transition">Platform
+                        Dashboard</button>
+                    <button onclick="loadSection('breeders')" class="block hover:text-white transition">Breeder
+                        Management</button>
+                    <button onclick="loadSection('orders')" class="block hover:text-white transition">Paid
+                        Transactions</button>
+                </nav>
+            </div>
+            <button onclick="adminLogout()" class="text-red-400 font-bold uppercase tracking-widest text-xs">Shutdown
+                Console</button>
+        </aside>
+
+        <main class="flex-1 p-16">
+            <div id="admin-login-area" class="max-w-md mx-auto mt-20">
+                <input type="password" id="admin-key" placeholder="Enter Admin Secret"
+                    class="w-full p-5 bg-white/5 border border-white/10 rounded-3xl mb-4 outline-none focus:border-emerald-400">
+                <button onclick="adminLogin()"
+                    class="w-full bg-emerald-600 p-5 rounded-3xl font-black text-lg shadow-xl shadow-emerald-500/20 hover:bg-emerald-500 transition-colors">Access
+                    Console</button>
+            </div>
+
+            <div id="admin-dashboard" class="hidden">
+                <h2 class="text-4xl font-black mb-10">Platform Live Stats</h2>
+                <div class="grid grid-cols-4 gap-8">
+                    <div class="bg-white/5 p-8 rounded-[2rem] border border-white/10">
+                        <p class="text-slate-500 text-xs font-bold uppercase mb-2">Net Platform Earnings</p>
+                        <p id="stat-revenue" class="text-3xl font-black text-emerald-400">0 CFA</p>
+                    </div>
+                    <div class="bg-white/5 p-8 rounded-[2rem] border border-white/10">
+                        <p class="text-slate-500 text-xs font-bold uppercase mb-2">Breeder Payouts Pending</p>
+                        <p id="stat-payouts" class="text-3xl font-black text-amber-400">0 CFA</p>
+                    </div>
+                </div>
+
+                <div class="mt-16 bg-white/5 rounded-[3rem] p-10 border border-white/10">
+                    <h3 class="text-xl font-bold mb-8">Active Breeder Payouts</h3>
+                    <div id="admin-breeder-list" class="space-y-4"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
