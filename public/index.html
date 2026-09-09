@@ -1,139 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetHaven | The Premium Pet Marketplace</title>
+    <meta name="description" content="PetHaven is the leading multi-vendor marketplace for pet parent connectivity. Ethical breeders, verified supplies, and secure NotchPay delivery across Cameroon.">
+    <meta property="og:title" content="PetHaven | The Premier Multi-Breeder Marketplace">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#10B981">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%90%BE%3C/text%3E%3C/svg%3E">
+    <title>PetHaven | Better Lives for Better Friends</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-cat { background-color: #10B981 !important; color: white !important; }
+        #cart-drawer { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        #cart-drawer.open { transform: translateX(0); }
+        .pet-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.12); }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in-bulk { animation: fadeSlide 0.6s ease forwards; }
+    </style>
 </head>
+<body data-page="index" class="bg-[#F8FAFC] text-slate-900 overflow-x-hidden">
+    <!-- Bulky Skip Accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[200] bg-emerald-600 text-white px-6 py-3 rounded-2xl font-black">Skip to Navigation</a>
 
-<body data-page="index" class="bg-slate-50 font-sans">
-    <header class="bg-white border-b sticky top-0 z-50 h-20 flex items-center shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 w-full flex justify-between">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🐾</span>
-                <a href="index.html" class="text-3xl font-black text-emerald-600">PetHaven</a>
-                <button id="mobile-menu-button" class="md:hidden ml-4">☰</button>
+    <!-- MASTER DYNAMIC NAVBAR -->
+    <header class="bg-white/95 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-[150] shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-8">
+                <!-- Branding & Hamburger -->
+                <div class="flex items-center gap-5">
+                    <button id="mobile-menu-button" type="button" class="md:hidden p-3 bg-slate-100 rounded-xl hover:bg-emerald-50 transition-colors" aria-expanded="false" aria-controls="mobile-menu">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    </button>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-500/20 rotate-3 transform hover:rotate-0 transition-transform">
+                            <span class="text-3xl">🐾</span>
+                        </div>
+                        <a href="index.html" class="text-2xl font-[900] tracking-tighter text-slate-900">Pet<span class="text-emerald-600">Haven</span></a>
+                    </div>
+                </div>
+
+                <!-- Main Desktop Navigation -->
+                <nav class="hidden lg:flex items-center gap-10">
+                    <a href="#main-content" class="text-slate-600 hover:text-emerald-600 text-sm font-bold transition-all uppercase tracking-widest">Storefront</a>
+                    <a href="#products" class="text-slate-600 hover:text-emerald-600 text-sm font-bold transition-all uppercase tracking-widest">Inventory</a>
+                    <a href="#featured" class="text-slate-600 hover:text-emerald-600 text-sm font-bold transition-all uppercase tracking-widest">Flash List</a>
+                </nav>
+
+                <!-- Dual Search: Redirection Engine Hooked in app.js -->
+                <div class="hidden md:flex flex-1 justify-center max-w-xl">
+                    <form id="desktop-search" class="w-full group relative">
+                        <div class="flex bg-slate-100 border border-transparent rounded-[1.25rem] overflow-hidden focus-within:ring-4 focus-within:ring-emerald-500/10 focus-within:bg-white focus-within:border-emerald-200 transition-all duration-500">
+                            <span class="pl-6 flex items-center text-slate-400 font-bold italic uppercase text-[10px] tracking-widest mr-2">Query:</span>
+                            <input id="desktop-search-input" type="search" class="w-full bg-transparent px-2 py-4 text-sm font-bold outline-none" placeholder="Search Breeds, Feeds, or Verified Kennels...">
+                            <button type="submit" class="bg-emerald-600 px-8 py-4 text-white font-black text-xs uppercase tracking-[0.2em] hover:bg-emerald-700 transition-all shadow-inner">EXECUTE</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right Side Interactive States -->
+                <div class="flex items-center gap-6">
+                    <div id="user-display-node" class="hidden sm:flex flex-col text-right group cursor-pointer transition-all hover:scale-105">
+                        <a href="account.html" id="account-button" class="flex flex-col">
+                            <span class="text-[9px] uppercase font-black tracking-[0.3em] text-slate-400 group-hover:text-emerald-500">Global ID</span>
+                            <span class="text-sm font-black text-slate-900 leading-tight">Sign In</span>
+                        </a>
+                    </div>
+                    <button type="button" class="open-vendor-modal hidden sm:block bg-slate-950 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-2xl hover:bg-emerald-600 transition-all transform active:scale-95">Breeder Node</button>
+                    <button id="cart-open-button" type="button" class="relative group p-3.5 bg-emerald-50 rounded-2xl text-emerald-700 hover:bg-emerald-100 transition-all shadow-emerald-500/5">
+                        <span class="text-2xl">🛒</span>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-rose-600 text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full border-[3px] border-white shadow-xl animate-pulse">0</span>
+                    </button>
+                </div>
             </div>
-            <div class="hidden md:flex gap-8 items-center font-bold text-slate-600">
-                <a href="#products">Animals</a>
-                <a href="#featured">Deals</a>
-                <a href="account.html">Account</a>
-                <button class="open-vendor-modal bg-slate-900 text-white px-4 py-2 rounded-xl">Breeder Portal</button>
+        </div>
+
+        <!-- FULL BULKY RESPONSIVE TOGGLE MENU -->
+        <div id="mobile-menu" class="md:hidden hidden border-t border-slate-100 bg-white/95 backdrop-blur-3xl animate-slide-down shadow-[-20px_50px_100px_rgba(0,0,0,0.1)]">
+            <div class="p-8 space-y-6">
+                <a href="#main-content" class="block bg-slate-50 rounded-3xl p-5 text-slate-700 font-black tracking-tighter text-xl border border-slate-100">🏠 Feed Dashboard</a>
+                <a href="#products" class="block bg-slate-50 rounded-3xl p-5 text-slate-700 font-black tracking-tighter text-xl border border-slate-100">🐾 Global Directory</a>
+                <a href="account.html" class="block bg-slate-50 rounded-3xl p-5 text-emerald-600 font-black tracking-tighter text-xl border border-emerald-100">👤 User Context</a>
+                <button type="button" class="open-vendor-modal block w-full text-left bg-emerald-600 rounded-3xl p-5 text-white font-black tracking-tighter text-xl shadow-xl shadow-emerald-500/20">🍖 Breeders Access</button>
+                <form id="mobile-search" class="mt-8 pt-8 border-t border-slate-100">
+                    <label class="text-[9px] uppercase font-black text-slate-400 mb-2 block tracking-widest ml-4 italic">Neural Net Search</label>
+                    <div class="flex rounded-3xl bg-slate-100 border-2 border-transparent focus-within:border-emerald-600 overflow-hidden shadow-inner">
+                        <input id="mobile-search-input" type="search" class="w-full bg-transparent px-6 py-5 text-lg font-black outline-none placeholder:text-slate-300" placeholder="Scan Species...">
+                        <button type="submit" class="bg-emerald-600 px-6 text-white font-black">GO</button>
+                    </div>
+                </form>
             </div>
-            <button id="cart-open-button" class="relative text-2xl">🛒 <span id="cart-count"
-                    class="absolute -top-2 -right-2 bg-rose-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold border-2 border-white">0</span></button>
         </div>
     </header>
 
-    <!-- FLASH SALE WITH TIMER -->
-    <section id="featured" class="bg-rose-50 py-16">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center mb-10">
-                <div class="flex items-center gap-4">
-                    <h3 class="text-3xl font-black text-rose-600 tracking-tighter">⚡ Flash Sales</h3>
-                    <div class="flex gap-2 text-white font-black"><span id="flash-hours"
-                            class="bg-slate-900 px-3 py-1 rounded-lg">00</span>:<span id="flash-minutes"
-                            class="bg-slate-900 px-3 py-1 rounded-lg">00</span>:<span id="flash-seconds"
-                            class="bg-rose-600 px-3 py-1 rounded-lg animate-pulse">00</span></div>
+    <main id="main-content">
+        <!-- Bulky High-Performance Hero -->
+        <section class="bg-white relative overflow-hidden pt-20 pb-32">
+            <!-- Professional Dynamic Layout Patterns (Mirroring live.app) -->
+            <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-100/50 rounded-full blur-[140px] -mr-96 -mt-96 opacity-60"></div>
+            <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-amber-50 rounded-full blur-[140px] -ml-64 -mb-96 opacity-60"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-16 relative z-10 items-center">
+                <div class="lg:col-span-7 text-center md:text-left">
+                    <div class="inline-flex items-center gap-4 bg-white p-2 pr-6 rounded-full border border-emerald-100 shadow-xl shadow-emerald-500/5 mb-10 fade-in-bulk">
+                        <span class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-xl">🚀</span>
+                        <span class="text-[10px] font-[900] uppercase tracking-[0.25em] text-emerald-900 leading-none">Pet Acquisition Hub Active</span>
+                    </div>
+                    <h1 class="text-7xl md:text-[8rem] font-[950] text-slate-950 leading-[0.8] tracking-[-0.05em] mb-12">
+                        Love is <br/><span class="text-emerald-600 italic">Evolutionary.</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-slate-500 max-w-xl leading-relaxed mb-16 font-medium tracking-tight">
+                        Deploy the world's most intelligent multi-breeder marketplace. Certified health records, premium nutrition nodes, and door-to-door delivery.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-8">
+                        <a href="#products" class="bg-slate-900 text-white px-16 py-7 rounded-[2.5rem] font-[950] text-2xl shadow-[0_30px_100px_rgba(0,0,0,0.4)] hover:bg-emerald-600 transition-all transform hover:-translate-y-3 hover:rotate-1">Adopt Node</a>
+                        <button type="button" class="open-vendor-modal bg-white border-[6px] border-slate-50 text-slate-900 px-16 py-7 rounded-[2.5rem] font-[950] text-2xl shadow-xl transition-all transform hover:-translate-y-3 hover:border-emerald-200">Register Kennel</button>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-full">
+                        <div class="relative z-10 aspect-[4/5] bg-slate-200 rounded-[5rem] overflow-hidden border-[16px] border-white shadow-[0_50px_120px_-20px_rgba(0,0,0,0.3)]">
+                            <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover">
+                            <div class="absolute inset-x-0 bottom-0 p-12 bg-gradient-to-t from-slate-950/90 to-transparent flex flex-col justify-end">
+                                <span class="bg-emerald-500 w-fit px-3 py-1 rounded-full text-white text-[8px] font-black uppercase mb-4 tracking-[0.3em]">Breeder verified</span>
+                                <h4 class="text-3xl font-black text-white italic tracking-tighter">Premium Husky Node</h4>
+                            </div>
+                        </div>
+                        <div class="absolute -top-10 -left-10 w-48 h-48 bg-amber-400 rounded-[3rem] -z-10 animate-bounce-slow"></div>
+                    </div>
                 </div>
             </div>
-            <div id="flash-sale-list" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
-        </div>
-    </section>
+        </section>
 
-    <!-- MAIN PRODUCT SECTION -->
-    <main class="max-w-7xl mx-auto px-4 py-16">
-        <div id="search-panel"
-            class="mb-12 bg-white p-10 rounded-[3rem] shadow-sm border flex flex-col md:flex-row gap-8 items-center">
-            <div class="flex-1 w-full">
-                <h2 class="font-black text-xl mb-4 uppercase text-slate-400 text-xs tracking-widest">Search Engine</h2>
-                <input id="search-input" type="search" placeholder="Search breeds, foods, shops..."
-                    class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-4 focus:ring-emerald-500/10 outline-none">
+        <!-- BULKY SEARCH INTEGRATION WITH FULL PRICE MATRIX -->
+        <section id="search-panel" class="max-w-7xl mx-auto px-4 py-16 scroll-mt-20">
+            <div class="bg-white rounded-[4rem] border border-slate-200 p-16 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.1)] relative">
+                <div class="absolute top-10 left-10 text-[180px] font-black opacity-5 pointer-events-none select-none italic text-emerald-950">ENGINE</div>
+                <div class="flex flex-col lg:flex-row items-center gap-16 relative z-10">
+                    <div class="lg:w-1/4">
+                        <h3 class="text-4xl font-[950] tracking-tighter text-slate-950 mb-3 italic">Filtered Feed</h3>
+                        <p class="text-slate-400 font-bold uppercase text-[9px] tracking-[0.5em] leading-loose">Access Neural Directory Matrix</p>
+                    </div>
+                    <div class="flex-1 w-full space-y-12">
+                        <div class="relative">
+                            <span class="absolute left-8 top-1/2 -translate-y-1/2 text-3xl">🧩</span>
+                            <input id="search-input" type="search" placeholder="Scan Directory (Ex: Golden Retriever, Feline Mix)..." class="w-full rounded-3xl bg-slate-50 border-none px-20 py-8 text-2xl font-black outline-none focus:ring-[16px] focus:ring-emerald-500/10 placeholder:text-slate-300 shadow-inner">
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-12 items-center">
+                            <div class="flex items-center gap-6">
+                                <span class="text-xs font-black uppercase tracking-[0.4em] text-slate-300">Monetary Scale (CFA)</span>
+                                <div class="flex items-center gap-3">
+                                    <input id="price-min-input" type="number" min="0" placeholder="Minimum" class="w-40 rounded-2xl bg-white border-2 border-slate-100 p-5 text-sm font-black focus:border-emerald-600 transition-all outline-none">
+                                    <span class="h-1 w-8 bg-slate-200 rounded-full"></span>
+                                    <input id="price-max-input" type="number" min="0" placeholder="Maximum" class="w-40 rounded-2xl bg-white border-2 border-slate-100 p-5 text-sm font-black focus:border-emerald-600 transition-all outline-none">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="flex gap-4">
-                <input id="price-min-input" type="number" placeholder="Min" class="p-4 bg-slate-50 rounded-2xl w-24">
-                <input id="price-max-input" type="number" placeholder="Max" class="p-4 bg-slate-50 rounded-2xl w-24">
+        </section>
+
+        <!-- RED THEME FLASH SALES (MIRRORING LIVE FLASH LOGIC) -->
+        <section id="featured" class="bg-[#FFF4F4] py-32 border-y border-rose-100 relative overflow-hidden">
+            <div class="absolute right-0 bottom-0 h-full w-1/4 bg-white/20 skew-x-[-15deg] transform translate-x-20"></div>
+            <div class="max-w-7xl mx-auto px-4 relative z-10">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-20 gap-10">
+                    <div class="flex items-center gap-8">
+                        <div class="w-24 h-24 bg-rose-600 rounded-[2.5rem] flex items-center justify-center text-5xl shadow-2xl shadow-rose-200 animate-pulse-short">⏳</div>
+                        <div>
+                            <h3 class="text-6xl font-[950] tracking-tighter italic">Acquisition Clearance</h3>
+                            <div class="flex gap-4 mt-6">
+                                <div class="bg-slate-950 p-4 rounded-2xl min-w-[70px] text-center shadow-2xl"><span id="flash-hours" class="text-2xl font-black text-white">00</span></div>
+                                <span class="text-slate-900 text-3xl font-black pt-3 animate-bounce-slow">:</span>
+                                <div class="bg-slate-950 p-4 rounded-2xl min-w-[70px] text-center shadow-2xl"><span id="flash-minutes" class="text-2xl font-black text-white">00</span></div>
+                                <span class="text-slate-900 text-3xl font-black pt-3 animate-bounce-slow">:</span>
+                                <div class="bg-rose-600 p-4 rounded-2xl min-w-[70px] text-center shadow-2xl border-2 border-white/20"><span id="flash-seconds" class="text-2xl font-black text-white">00</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="bg-white border-[6px] border-slate-50 text-rose-600 px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest hover:bg-rose-600 hover:text-white transition-all shadow-xl">See Limited Adoptions</button>
+                </div>
+
+                <div id="flash-sale-list" class="grid grid-cols-2 md:grid-cols-4 gap-10">
+                    <!-- Industrial Load Skeletons (Match app.js Pulse Logic) -->
+                    <div class="animate-pulse bg-white/50 h-[500px] rounded-[3rem] border border-white"></div>
+                    <div class="animate-pulse bg-white/50 h-[500px] rounded-[3rem] border border-white"></div>
+                    <div class="animate-pulse bg-white/50 h-[500px] rounded-[3rem] border border-white"></div>
+                    <div class="animate-pulse bg-white/50 h-[500px] rounded-[3rem] border border-white"></div>
+                </div>
             </div>
-        </div>
-        <div class="flex gap-2 mb-10 overflow-x-auto pb-2 font-bold no-scrollbar">
-            <button data-category="all"
-                class="category-filter bg-emerald-600 text-white px-8 py-3 rounded-full shadow-lg">All</button>
-            <button data-category="dogs" class="category-filter bg-white border px-8 py-3 rounded-full">Puppies</button>
-            <button data-category="cats" class="category-filter bg-white border px-8 py-3 rounded-full">Kittens</button>
-            <button data-category="food"
-                class="category-filter bg-white border px-8 py-3 rounded-full">Nutrition</button>
-        </div>
-        <div id="products-list" class="grid grid-cols-1 md:grid-cols-4 gap-10"></div>
+        </section>
+
+        <!-- MAIN PRODUCTION INVENTORY -->
+        <section id="products" class="max-w-7xl mx-auto px-4 py-32 scroll-mt-24">
+            <div class="flex flex-col lg:flex-row justify-between items-end mb-24 gap-12">
+                <div class="max-w-xl">
+                    <div class="h-2.5 w-24 bg-emerald-500 rounded-full mb-8"></div>
+                    <h2 class="text-6xl font-black tracking-tight leading-[0.85] text-slate-950 italic">The Active <br/>Inventory Repository.</h2>
+                    <p class="text-xl font-medium text-slate-400 mt-6 uppercase tracking-widest text-[10px]">Filtering high-performance animal modules</p>
+                </div>
+                <div class="flex flex-wrap gap-4 p-4 bg-white border border-slate-100 rounded-[3rem] shadow-sm">
+                    <button data-category="all" class="category-filter active-cat px-10 py-4 rounded-[2rem] text-sm font-black transition-all">Omni Inventory</button>
+                    <button data-category="dogs" class="category-filter bg-slate-50 hover:bg-emerald-50 text-slate-600 px-10 py-4 rounded-[2rem] text-sm font-black transition-all border border-transparent hover:border-emerald-200">Puppies</button>
+                    <button data-category="cats" class="category-filter bg-slate-50 hover:bg-emerald-50 text-slate-600 px-10 py-4 rounded-[2rem] text-sm font-black transition-all border border-transparent hover:border-emerald-200">Kittens</button>
+                    <button data-category="birds" class="category-filter bg-slate-50 hover:bg-emerald-50 text-slate-600 px-10 py-4 rounded-[2rem] text-sm font-black transition-all border border-transparent hover:border-emerald-200">Exotic Birds</button>
+                    <button data-category="food" class="category-filter bg-slate-50 hover:bg-emerald-50 text-slate-600 px-10 py-4 rounded-[2rem] text-sm font-black transition-all border border-transparent hover:border-emerald-200">Supplies</button>
+                </div>
+            </div>
+            <div id="products-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 min-h-[1000px]">
+                <!-- Massive Cards inject here -->
+            </div>
+        </section>
+
+        <!-- HORIZONTAL SNAP COLLECTIONS (1:1 with console/android sections) -->
+        <section id="collections" class="bg-[#1A202C] py-40 overflow-hidden text-white border-y border-emerald-900">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex items-center justify-between mb-16 border-l-[12px] border-emerald-500 pl-8">
+                    <div>
+                        <h2 class="text-4xl font-black tracking-tight leading-none italic uppercase">Bulky Breed Arrivals</h2>
+                        <p class="text-emerald-500 font-bold uppercase text-[10px] tracking-[0.5em] mt-3">Direct Sync from Verified Kennel Hubs</p>
+                    </div>
+                </div>
+                <div id="dogs-list" class="flex gap-10 overflow-x-auto pb-10 hide-scrollbar snap-x no-scrollbar">
+                    <!-- Carousel cards with min-width logic -->
+                </div>
+            </div>
+        </section>
+
+        <section id="exotic-cats" class="bg-white py-40 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex items-center justify-between mb-16 border-r-[12px] border-amber-400 pr-8 text-right">
+                    <div>
+                        <h2 class="text-4xl font-black tracking-tight leading-none italic uppercase">Verified Kittens Node</h2>
+                        <p class="text-amber-500 font-bold uppercase text-[10px] tracking-[0.5em] mt-3">Active Feline Listing Modules</p>
+                    </div>
+                </div>
+                <div id="cats-list" class="flex gap-10 overflow-x-auto pb-10 hide-scrollbar snap-x no-scrollbar"></div>
+            </div>
+        </section>
     </main>
 
-    <!-- FULL 4-COLUMN FOOTER -->
-    <footer id="footer" class="bg-slate-900 text-slate-400 pt-20 pb-10">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
-            <div>
-                <h1 class="text-white text-3xl font-black mb-4 tracking-tighter">PetHaven</h1>
-                <p>Verified breeders connecting with loving homes.</p>
+    <!-- FULL SEO FOOTER NODE (Professional Complexity) -->
+    <footer id="footer" class="bg-slate-950 text-slate-500 pt-32 pb-16 relative border-t-[8px] border-emerald-950 overflow-hidden">
+        <!-- Floating Elements -->
+        <div class="absolute -top-32 right-0 w-[400px] h-[400px] bg-emerald-600/5 rounded-full blur-[80px]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-24 mb-24 pb-24 border-b border-white/5">
+                <div class="md:col-span-1 space-y-12">
+                    <div class="flex items-center gap-3">
+                        <span class="text-4xl">🐾</span>
+                        <h1 class="text-4xl font-black text-white italic tracking-tighter">PetHaven</h1>
+                    </div>
+                    <p class="text-lg leading-relaxed text-slate-400 font-medium tracking-tight">The ultimate global marketplace for pet connectivity. Uniting verified ethical breeders with households across Cameroon via encrypted blockchain verification.</p>
+                    <div class="flex gap-4">
+                        <div class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-emerald-600 transition-all hover:-translate-y-2 cursor-pointer shadow-lg shadow-black">FB</div>
+                        <div class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-emerald-400 transition-all hover:-translate-y-2 cursor-pointer shadow-lg shadow-black">TW</div>
+                        <div class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-rose-600 transition-all hover:-translate-y-2 cursor-pointer shadow-lg shadow-black">IG</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-[950] uppercase text-xs tracking-[0.4em] mb-12 flex items-center gap-3">
+                        <span class="h-4 w-1 bg-emerald-500 rounded-full"></span> Protocol Services
+                    </h4>
+                    <ul class="space-y-8 text-xs font-black uppercase tracking-[0.2em]">
+                        <li><a href="#" class="hover:text-emerald-400 transition-all inline-block hover:translate-x-2">General Support Hub</a></li>
+                        <li><a href="#" class="hover:text-emerald-400 transition-all inline-block hover:translate-x-2">Active Logistics Sync</a></li>
+                        <li><a href="#" class="hover:text-emerald-400 transition-all inline-block hover:translate-x-2">Pet Medical Policy</a></li>
+                        <li><a href="#" class="hover:text-rose-400 transition-all inline-block hover:translate-x-2 text-rose-800">Fraud Center Matrix</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-[950] uppercase text-xs tracking-[0.4em] mb-12 flex items-center gap-3">
+                        <span class="h-4 w-1 bg-amber-500 rounded-full"></span> Business Ops
+                    </h4>
+                    <ul class="space-y-8 text-xs font-black uppercase tracking-[0.2em]">
+                        <li><button type="button" class="open-vendor-modal hover:text-emerald-400 transition-all text-left inline-block hover:translate-x-2">Open Breeder Account</button></li>
+                        <li><a href="#" class="hover:text-emerald-400 transition-all inline-block hover:translate-x-2">Supply Fulfillment</a></li>
+                        <li><a href="admin.html" class="bg-emerald-950/40 px-6 py-4 rounded-xl border border-white/5 text-emerald-400 shadow-xl inline-block mt-4 hover:bg-emerald-600 hover:text-white">STAFF DASHBOARD CONTROL</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-[950] uppercase text-xs tracking-[0.4em] mb-12 flex items-center gap-3">
+                        <span class="h-4 w-1 bg-blue-500 rounded-full"></span> Payment Node
+                    </h4>
+                    <p class="text-[10px] font-[900] text-slate-500 uppercase tracking-widest leading-loose mb-10 italic">Global encryption protocols integrated via NotchPay V3 processing ecosystem.</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-3 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center font-black text-white text-[9px] uppercase tracking-tighter">MTN MoMo</div>
+                        <div class="p-3 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center font-black text-white text-[9px] uppercase tracking-tighter">Orange Money</div>
+                        <div class="p-3 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center font-black text-white text-[9px] uppercase tracking-tighter">Visa Node</div>
+                        <div class="p-3 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center font-black text-white text-[9px] uppercase tracking-tighter">Notch Verified</div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h4 class="text-white font-bold mb-6 uppercase text-xs tracking-widest">Support</h4>
-                <ul class="space-y-4">
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Health Policy</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-6 uppercase text-xs tracking-widest">Breeder</h4>
-                <ul class="space-y-4">
-                    <li><button class="open-vendor-modal">Breeder Login</button></li>
-                    <li><a href="admin.html">Admin</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-6 uppercase text-xs tracking-widest">Legal</h4>
-                <ul class="space-y-4">
-                    <li><a href="#">Privacy</a></li>
-                    <li><a href="#">Terms</a></li>
-                </ul>
+
+            <div class="flex flex-col md:flex-row items-center justify-between pt-8 gap-8">
+                <p class="text-[9px] font-black uppercase tracking-[0.6em] text-slate-800 leading-none italic">&copy; 2026 PetHaven Neural Commerce Interface. All Nodes Operational.</p>
+                <div class="flex items-center gap-10">
+                    <span class="h-2 w-2 bg-emerald-500 rounded-full animate-ping"></span>
+                    <p class="text-[10px] font-black text-emerald-500 tracking-[0.3em]">SECURE PRODUCTION TUNNEL ACTIVE</p>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- VENDOR MODAL -->
-    <div id="vendor-modal"
-        class="hidden fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-        <div class="bg-white w-full max-w-lg rounded-[3rem] p-10 shadow-2xl">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-black">Breeder Access</h2><button id="close-vendor-modal">✕</button>
+    <!-- MODAL NODE: Multi-Vendor Entry Pop-in (Professional Interaction Logic) -->
+    <div id="vendor-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center bg-slate-950/95 backdrop-blur-3xl p-4 overflow-y-auto no-scrollbar">
+        <div class="w-full max-w-lg rounded-[4rem] bg-white shadow-2xl overflow-hidden border border-white/20 animate-fade-in relative my-auto">
+            <!-- Modal Background Abstract -->
+            <div class="absolute inset-0 opacity-10 rotate-45 scale-150 pointer-events-none">
+                <div class="h-full w-full bg-gradient-to-tr from-emerald-600 to-amber-100 blur-3xl"></div>
             </div>
-            <form id="vendor-signin-form" class="space-y-4">
-                <input type="email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-2xl outline-none">
-                <input type="password" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-2xl outline-none">
-                <button type="submit"
-                    class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black text-xl shadow-xl shadow-emerald-200">Sign
-                    In</button>
+
+            <!-- Form Header Area -->
+            <div class="bg-emerald-600 px-12 py-10 flex justify-between items-center text-white relative">
+                <div class="z-10">
+                    <h2 class="text-3xl font-[950] tracking-tighter">Node Login</h2>
+                    <p class="text-[10px] uppercase font-black tracking-widest mt-2 text-emerald-100 opacity-60">Verified Breeder Entry</p>
+                </div>
+                <button id="close-vendor-modal" type="button" class="z-10 w-14 h-14 bg-white/10 rounded-3xl flex items-center justify-center font-black text-white hover:bg-white/20 transition-all border border-white/10 active:scale-90">✕</button>
+            </div>
+
+            <!-- Bulk Logic Form Interaction -->
+            <form id="vendor-signin-form" class="p-12 space-y-6 relative">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[10px] uppercase font-black text-slate-400 ml-3 tracking-[0.2em] mb-1 block">Account Identity</label>
+                        <input id="vendor-email" type="email" required class="w-full p-6 bg-slate-50 border-none rounded-3xl text-lg font-black outline-none focus:ring-4 focus:ring-emerald-500/10 shadow-inner" placeholder="E-Mail Protocol">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-black text-slate-400 ml-3 tracking-[0.2em] mb-1 block">Breeder Key</label>
+                        <input id="vendor-password" type="password" required class="w-full p-6 bg-slate-50 border-none rounded-3xl text-lg font-black outline-none focus:ring-4 focus:ring-emerald-500/10 shadow-inner" placeholder="••••••••••••••">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-black text-slate-400 ml-3 tracking-[0.2em] mb-1 block">Associated Kennel</label>
+                        <input id="vendor-store" type="text" class="w-full p-6 bg-slate-50 border-none rounded-3xl text-lg font-black outline-none focus:ring-4 focus:ring-emerald-500/10 shadow-inner" placeholder="Pet Shop Branch Name">
+                    </div>
+                </div>
+                
+                <div id="vendor-status" class="text-center font-black text-rose-500 text-[10px] uppercase tracking-widest h-2"></div>
+
+                <button type="submit" class="w-full bg-slate-900 py-7 rounded-[3rem] text-white font-[950] text-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:bg-emerald-600 transition-all transform hover:-translate-y-1 active:scale-95 border-b-[8px] border-emerald-800">
+                    Authorize Session ⚡
+                </button>
+                <div class="text-center mt-10">
+                    <p class="text-[10px] uppercase font-black text-slate-400 tracking-[0.15em] mb-3 leading-none italic">Access Protected by PETHAVEN ENCRYPTION NODE</p>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- CART DRAWER -->
-    <aside id="cart-drawer"
-        class="fixed inset-y-0 right-0 z-[2000] hidden w-full max-w-md bg-white shadow-2xl border-l flex flex-col">
-        <div class="p-10 flex items-center justify-between border-b">
-            <h2 class="text-2xl font-black">Pet Basket</h2><button id="close-cart-drawer">✕</button>
+    <!-- BULKY CART DRAWER ARCHITECTURE -->
+    <aside id="cart-drawer" class="fixed inset-y-0 right-0 z-[400] hidden w-full max-w-md bg-white shadow-[-60px_0_120px_rgba(0,0,0,0.3)] border-l border-slate-100 flex flex-col no-scrollbar">
+        <!-- Drawer Component Internal logic mirrored 1:1 in app.js -->
+        <div class="p-12 flex items-center justify-between border-b border-slate-100 bg-white sticky top-0 z-[10]">
+            <div>
+                <h2 class="text-4xl font-[950] text-slate-950 tracking-tighter">Your Hub</h2>
+                <p class="text-[10px] uppercase font-[950] text-slate-300 mt-2 tracking-[0.5em] italic">Active Allocation Sum</p>
+            </div>
+            <button id="close-cart-drawer" class="w-16 h-16 bg-slate-100 rounded-[2rem] flex items-center justify-center font-black text-slate-400 hover:text-rose-500 transition-all hover:bg-rose-50 shadow-sm border border-transparent hover:border-rose-100">✕</button>
         </div>
-        <div id="cart-items" class="flex-1 overflow-y-auto p-10 space-y-6"></div>
-        <div class="p-10 border-t">
-            <div class="flex justify-between mb-8"><span
-                    class="text-slate-400 font-bold uppercase text-xs">Total</span><span id="cart-total"
-                    class="text-3xl font-black text-emerald-600">0 CFA</span></div><button
-                onclick="window.location.href='checkout.html'"
-                class="w-full bg-emerald-600 text-white py-5 rounded-[2rem] font-black text-xl shadow-xl shadow-emerald-100">Checkout</button>
+        
+        <!-- Logic list loaded via RenderCartItems -->
+        <div id="cart-items" class="flex-1 overflow-y-auto p-10 space-y-12 no-scrollbar bg-[#FBFCFE]"></div>
+
+        <div class="p-12 border-t border-slate-200 bg-white sticky bottom-0">
+            <div class="flex justify-between items-end mb-12">
+                <span class="text-slate-400 font-black uppercase text-[10px] tracking-[0.4em]">Aggregated Payout</span>
+                <span id="cart-total" class="text-5xl font-[950] text-emerald-600 tracking-tighter leading-none shadow-text-emerald">0 CFA</span>
+            </div>
+            <button id="checkout-button" class="w-full bg-slate-900 text-white py-8 rounded-[3rem] font-black text-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:bg-emerald-600 transition-all transform hover:-translate-y-2 active:scale-95 border-b-[8px] border-slate-700 hover:border-emerald-800">
+                FINAL LOGISTICS 📦
+            </button>
+            <p class="text-center text-[10px] font-[950] uppercase tracking-[0.5em] text-slate-300 mt-10">Protocols Authorized Globally</p>
         </div>
     </aside>
 
+    <!-- Master Scripts -->
     <script src="app.js"></script>
 </body>
-
 </html>
