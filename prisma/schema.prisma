@@ -8,24 +8,28 @@ datasource db {
 }
 
 model User {
-  id                  String    @id @default(uuid())
+  id                  String    @id @default(cuid())
   fullName            String
   email               String    @unique
   password            String
-  role                String    @default("customer") // customer, vendor, admin
+  role                String    @default("customer") // customer, vendor
   businessName        String?
-  momoProvider        String?
-  momoPhone           String?
-  notchpayRecipientId String?
+  momoProvider        String?   // "MTN" or "ORANGE" — vendor's real payout account
+  momoPhone           String?   // vendor's real Mobile Money number
+  notchpayRecipientId String?   // cached once created, so we don't recreate it on every payout
   createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
   sessions            Session[]
   orders              Order[]
   wishlist            WishlistItem[]
   reviews             Review[]
+  products            Product[] @relation("VendorProducts")
+  payouts             Payout[]
+  passwordResetTokens PasswordResetToken[]
 }
 
 model Session {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   token     String   @unique
   userId    String
   user      User     @relation(fields: [userId], references: [id])
@@ -34,45 +38,51 @@ model Session {
 }
 
 model Product {
-  id          String   @id
+  id          String      @id // slug-based id, e.g. "dogs-golden-retriever-puppy-a1b2c3"
   name        String
-  description String
-  features    String[]
-  image       String
-  vendor      String
-  vendorId    String?
-  price       Int
-  category    String   // dogs, cats, food, accessories, small-pets
-  breed       String?  // Pet Specific
-  age         String?  // Pet Specific
-  stock       Int      @default(1)
+  description String?
+  features    String[]    @default([]) // bullet points, e.g. "About this pet/item"
+  image       String?
+  vendor      String                    // display name (kept for old rows without a real account)
+  vendorId    String?                   // real link to the vendor's User account
+  vendorUser  User?       @relation("VendorProducts", fields: [vendorId], references: [id])
+  price       Int         // stored in CFA
+  category    String      // dogs, cats, food, toys, small-pets, accessories
+  breed       String?     // pet-specific — irrelevant for food/toys/accessories
+  age         String?     // pet-specific — e.g. "12 weeks", "2 years"
+  stock       Int         @default(1) // live animals: usually 1; food/toys/accessories: vendor sets real qty
   rating      Float?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   orderItems  OrderItem[]
   wishlist    WishlistItem[]
   reviews     Review[]
+
+  @@index([vendorId])
 }
 
 model Order {
   id               String      @id @default(cuid())
   userId           String
   user             User        @relation(fields: [userId], references: [id])
-  itemsSubtotal    Int
-  deliveryFee      Int
+  itemsSubtotal    Int         @default(0)
+  deliveryFee      Int         @default(0)
   discountAmount   Int         @default(0)
   couponCode       String?
   totalAmount      Int
   status           String      @default("PENDING_PAYMENT")
   paymentStatus    String      @default("UNPAID")
-  paymentMethod    String?
-  paymentProvider  String?
-  paymentReference String?
-  shippingAddress  String
-  shippingCity     String
-  shippingPhone    String
+  paymentMethod    String?     // "MOMO", "ORANGE_MONEY", "CARD"
+  paymentProvider  String?     // "notchpay"
+  paymentReference String?     @unique
+  shippingAddress  String      @default("")
+  shippingCity     String      @default("")
+  shippingPhone    String      @default("")
   createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
   items            OrderItem[]
+
+  @@index([paymentReference])
 }
 
 model OrderItem {
@@ -83,14 +93,15 @@ model OrderItem {
   product        Product @relation(fields: [productId], references: [id])
   quantity       Int
   price          Int
-  commissionRate Float
-  platformFee    Int
-  vendorEarning  Int
+  commissionRate Float   @default(0)
+  platformFee    Int     @default(0)
+  vendorEarning  Int     @default(0)
+  createdAt      DateTime @default(now())
 }
 
 model Coupon {
   code           String    @id
-  discountType   String    // PERCENT or FIXED
+  discountType   String
   discountValue  Int
   maxUses        Int?
   usesCount      Int       @default(0)
@@ -112,6 +123,7 @@ model Review {
   createdAt        DateTime @default(now())
 
   @@unique([productId, userId])
+  @@index([productId])
 }
 
 model WishlistItem {
@@ -123,22 +135,31 @@ model WishlistItem {
   createdAt DateTime @default(now())
 
   @@unique([userId, productId])
+  @@index([userId])
 }
 
 model Payout {
   id        String   @id @default(cuid())
   vendorId  String
+  vendor    User     @relation(fields: [vendorId], references: [id])
   amount    Int
   method    String?
   reference String?
   automated Boolean  @default(false)
   notes     String?
   createdAt DateTime @default(now())
+
+  @@index([vendorId])
 }
 
 model PasswordResetToken {
-  token     String    @id
+  id        String    @id @default(cuid())
+  token     String    @unique
   userId    String
+  user      User      @relation(fields: [userId], references: [id])
   expiresAt DateTime
   usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([token])
 }
