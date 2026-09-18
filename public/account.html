@@ -2,43 +2,141 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>PetHaven | My Account</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyPetshoppy | Account</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
-<body data-page="account" class="bg-slate-50">
-    <header class="bg-white border-b sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="index.html" class="text-2xl font-black text-emerald-600">🐾 PetHaven</a>
-            <a href="index.html" class="text-sm font-medium">Back to Shop</a>
+<body data-page="account" class="bg-slate-50 text-slate-900">
+  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3">
+        <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center rounded-lg border border-slate-200 p-2 text-slate-600" aria-expanded="false" aria-controls="mobile-menu">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <a href="index.html" class="text-2xl font-extrabold tracking-tight"><span class="text-rose-500">My</span><span class="text-emerald-600">Petshoppy</span></a>
+      </div>
+      <nav class="hidden items-center gap-8 md:flex">
+        <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-emerald-600">Home</a>
+        <a href="account.html" id="account-button" class="text-sm font-medium text-slate-600 hover:text-emerald-600">Account</a>
+      </nav>
+      <button id="cart-open-button" class="relative rounded-full bg-slate-100 px-4 py-2 text-slate-700 hover:bg-slate-200">
+        🛒 <span id="cart-count" class="absolute -right-2 -top-2 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-rose-500 px-1.5 text-xs text-white">0</span>
+      </button>
+    </div>
+    <div id="mobile-menu" class="md:hidden hidden border-t border-slate-200 bg-white">
+      <div class="space-y-2 px-4 py-4">
+        <a href="index.html" class="block rounded-xl px-4 py-2 text-slate-700 hover:bg-slate-100">Home</a>
+        <a href="account.html" id="mobile-account-button" class="block rounded-xl px-4 py-2 text-slate-700 hover:bg-slate-100 font-semibold">Sign in / Account</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+    <section class="mb-10 rounded-3xl bg-gradient-to-r from-rose-50 via-orange-50 to-emerald-50 p-8 shadow-sm border border-rose-100">
+      <h1 class="text-3xl font-bold text-slate-900">Account</h1>
+      <p class="mt-3 text-sm text-slate-500">Sign in or register to manage orders and save your favorite pets.</p>
+    </section>
+
+    <div class="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+      <section class="rounded-3xl bg-white p-6 shadow-sm">
+        <div id="auth-area">
+          <div class="space-y-8">
+            <div>
+              <h2 class="text-xl font-semibold text-slate-900">Welcome back</h2>
+              <p class="mt-2 text-sm text-slate-500">Sign in to see your order history and saved listings.</p>
+            </div>
+            <form id="login-form" class="space-y-4">
+              <div>
+                <label class="text-sm font-medium text-slate-700">Email</label>
+                <input name="email" type="email" required class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+              </div>
+              <div>
+                <label class="text-sm font-medium text-slate-700">Password</label>
+                <input name="password" type="password" required class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+              </div>
+              <button type="submit" class="w-full rounded-full bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700">Sign in</button>
+              <button type="button" id="forgot-password-toggle" class="text-xs text-emerald-600 hover:underline">Forgot your password?</button>
+            </form>
+
+            <form id="forgot-password-form" class="hidden space-y-4 mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div>
+                <label class="text-sm font-medium text-slate-700">Enter your account email</label>
+                <input name="email" type="email" required class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+              </div>
+              <button type="submit" class="w-full rounded-full bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800">Send reset link</button>
+              <p id="forgot-password-status" class="text-sm text-center"></p>
+            </form>
+          </div>
+          <div class="mt-10 border-t border-slate-200 pt-8">
+            <h2 class="text-xl font-semibold text-slate-900">New here?</h2>
+            <p class="mt-2 text-sm text-slate-500">Create an account to save listings and checkout faster.</p>
+            <form id="signup-form" class="mt-6 space-y-4">
+              <div>
+                <label class="text-sm font-medium text-slate-700">Full name</label>
+                <input name="fullName" type="text" required class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+              </div>
+              <div>
+                <label class="text-sm font-medium text-slate-700">Email</label>
+                <input name="email" type="email" required class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+              </div>
+              <div>
+                <label class="text-sm font-medium text-slate-700">Password</label>
+                <input name="password" type="password" required class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+              </div>
+              <button type="submit" class="w-full rounded-full bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800">Create account</button>
+            </form>
+          </div>
         </div>
-    </header>
-    <main class="mx-auto max-w-5xl px-4 py-10">
-        <section class="mb-10 rounded-3xl bg-gradient-to-r from-emerald-50 to-teal-50 p-8 border border-emerald-100">
-            <h1 class="text-3xl font-bold text-slate-900">Welcome to the Pack</h1>
-            <p class="mt-2 text-slate-500">Manage your pet orders and profile.</p>
+
+        <div id="profile-area" class="hidden">
+          <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+            <div class="flex items-start gap-4 mb-6">
+              <div class="w-16 h-16 rounded-full overflow-hidden bg-emerald-100 flex items-center justify-center flex-shrink-0 text-3xl">🐾</div>
+              <div>
+                <h2 class="text-xl font-semibold text-slate-900" id="profile-name"></h2>
+                <p class="mt-1 text-sm text-slate-500" id="profile-email"></p>
+              </div>
+            </div>
+            <button id="signout-button" class="w-full rounded-full bg-red-600 px-4 py-3 text-sm font-semibold text-white hover:bg-red-700">Sign out</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="space-y-8">
+        <section class="rounded-3xl bg-white p-6 shadow-sm">
+          <h2 class="text-xl font-semibold text-slate-900">Order history</h2>
+          <div id="order-history" class="mt-6 text-sm text-slate-500">Loading your orders…</div>
         </section>
-        <div class="grid gap-10 lg:grid-cols-2">
-            <div id="auth-area" class="bg-white p-8 rounded-3xl shadow-sm border">
-                <h2 class="text-xl font-bold mb-6">Sign In</h2>
-                <form id="login-form" class="space-y-4">
-                    <input name="email" type="email" placeholder="Email"
-                        class="w-full rounded-2xl border p-4 outline-none focus:ring-2 focus:ring-emerald-100" />
-                    <input name="password" type="password" placeholder="Password"
-                        class="w-full rounded-2xl border p-4 outline-none focus:ring-2 focus:ring-emerald-100" />
-                    <button type="submit" class="w-full bg-emerald-600 text-white py-4 rounded-full font-bold">Access My
-                        Account</button>
-                </form>
-            </div>
-            <div class="bg-white p-8 rounded-3xl shadow-sm border">
-                <h2 class="text-xl font-bold mb-6">Order History</h2>
-                <div id="order-history" class="text-slate-400 text-sm">No pet supplies ordered yet.</div>
-            </div>
-        </div>
-    </main>
-    <script src="app.js"></script>
+        <section class="rounded-3xl bg-white p-6 shadow-sm">
+          <h2 class="text-xl font-semibold text-slate-900">Wishlist</h2>
+          <div id="wishlist-items" class="mt-6 grid gap-4 text-sm text-slate-500">Loading your wishlist…</div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <aside id="cart-drawer" class="fixed inset-y-0 right-0 z-50 hidden w-full max-w-md border-l border-slate-200 bg-white p-6 shadow-2xl">
+    <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+      <div><h2 class="text-xl font-bold text-slate-900">Your cart</h2><p class="text-sm text-slate-500">Review items before checkout.</p></div>
+      <button id="close-cart-drawer" class="text-slate-500 hover:text-slate-900">Close</button>
+    </div>
+    <div id="cart-items" class="mt-6 space-y-4"></div>
+    <div class="mt-6 border-t border-slate-200 pt-4">
+      <div class="flex items-center justify-between text-sm text-slate-700"><span>Total</span><span id="cart-total" class="font-semibold text-slate-900">0 CFA</span></div>
+      <button id="checkout-button" class="mt-4 w-full rounded-full bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700">Checkout</button>
+    </div>
+  </aside>
+
+  <footer class="border-t border-slate-200 bg-white py-10 mt-10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <span class="text-xl font-extrabold"><span class="text-rose-500">My</span><span class="text-emerald-600">Petshoppy</span></span>
+      <p class="mt-4 text-sm text-slate-500">support@mypetshoppy.example</p>
+    </div>
+  </footer>
+  <script src="app.js"></script>
 </body>
 
 </html>
