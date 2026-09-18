@@ -2,31 +2,68 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>PetHaven | Product Details</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyPetshoppy | Listing details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
-<body data-page="product" class="bg-slate-50">
-    <header class="bg-white border-b sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="index.html" class="text-2xl font-black text-emerald-600">🐾 PetHaven</a>
-            <button id="cart-open-button">🛒 <span id="cart-count">0</span></button>
-        </div>
-    </header>
-    <main id="main-content" class="mx-auto max-w-7xl px-4 py-12">
-        <!-- This section will be populated by app.js using the Product Detail Logic -->
-        <div id="product-detail" class="grid lg:grid-cols-2 gap-12">
-            <div class="animate-pulse bg-slate-200 h-96 rounded-3xl"></div>
-            <div class="space-y-4">
-                <div class="h-8 bg-slate-200 w-1/2 rounded"></div>
-                <div class="h-4 bg-slate-200 w-full rounded"></div>
-                <div class="h-12 bg-slate-200 w-32 rounded"></div>
-            </div>
-        </div>
-    </main>
-    <script src="app.js"></script>
+<body data-page="product" class="bg-slate-50 text-slate-900">
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-emerald-600 text-white px-4 py-2 rounded-lg">Skip to content</a>
+  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3">
+        <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center rounded-lg border border-slate-200 p-2 text-slate-600" aria-expanded="false" aria-controls="mobile-menu">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <a href="index.html" class="text-2xl font-extrabold tracking-tight"><span class="text-rose-500">My</span><span class="text-emerald-600">Petshoppy</span></a>
+      </div>
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-emerald-600">Home</a>
+        <a href="index.html#products" class="text-sm font-medium text-slate-600 hover:text-emerald-600">Products</a>
+        <a href="account.html" id="account-button" class="text-sm font-medium text-slate-600 hover:text-emerald-600">Sign in</a>
+      </nav>
+      <button id="cart-open-button" class="relative rounded-full bg-slate-100 px-4 py-2 text-slate-700 hover:bg-slate-200">
+        🛒 <span id="cart-count" class="absolute -right-2 -top-2 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-rose-500 px-1.5 text-xs text-white">0</span>
+      </button>
+    </div>
+    <div id="mobile-menu" class="md:hidden hidden border-t border-slate-200 bg-white">
+      <div class="space-y-2 px-4 py-4">
+        <a href="index.html" class="block rounded-xl px-4 py-2 text-slate-700 hover:bg-slate-100">Home</a>
+        <a href="index.html#products" class="block rounded-xl px-4 py-2 text-slate-700 hover:bg-slate-100">Products</a>
+        <a href="account.html" id="mobile-account-button" class="block rounded-xl px-4 py-2 text-slate-700 hover:bg-slate-100 font-semibold">Sign in / Account</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div id="product-detail" class="fade-in"></div>
+    <section class="mt-12">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6">You may also like</h2>
+      <div id="recommendations-list" class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4"></div>
+    </section>
+  </main>
+
+  <aside id="cart-drawer" class="fixed inset-y-0 right-0 z-50 hidden w-full max-w-md border-l border-slate-200 bg-white p-6 shadow-2xl">
+    <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+      <div><h2 class="text-xl font-bold text-slate-900">Your cart</h2><p class="text-sm text-slate-500">Review items before checkout.</p></div>
+      <button id="close-cart-drawer" class="text-slate-500 hover:text-slate-900">Close</button>
+    </div>
+    <div id="cart-items" class="mt-6 space-y-4"></div>
+    <div class="mt-6 border-t border-slate-200 pt-4">
+      <div class="flex items-center justify-between text-sm text-slate-700"><span>Total</span><span id="cart-total" class="font-semibold text-slate-900">0 CFA</span></div>
+      <button id="checkout-button" class="mt-4 w-full rounded-full bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700">Checkout</button>
+    </div>
+  </aside>
+
+  <footer class="border-t border-slate-200 bg-white py-10 mt-10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <span class="text-xl font-extrabold"><span class="text-rose-500">My</span><span class="text-emerald-600">Petshoppy</span></span>
+      <p class="mt-4 text-sm text-slate-500">A trusted marketplace for pets and pet supplies.</p>
+    </div>
+  </footer>
+  <script src="app.js"></script>
 </body>
 
 </html>

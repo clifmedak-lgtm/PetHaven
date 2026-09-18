@@ -4,248 +4,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Secure checkout for PetHaven. Complete your pet adoption or supply purchase with encrypted local and international payments.">
-    <title>Checkout | PetHaven Secure Marketplace</title>
+    <title>Checkout | MyPetshoppy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
 </head>
 
-<body data-page="checkout" class="bg-gray-50 text-gray-900 overflow-x-hidden">
-    <!-- Accessibility Skip Link -->
-    <a href="#main-content"
-        class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold shadow-xl">Skip
-        to content</a>
+<body data-page="checkout" class="bg-gray-50 font-sans text-gray-900">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-emerald-600 text-white px-4 py-2 rounded-lg">Skip to content</a>
 
-    <!-- Sticky Navigation Header -->
-    <header class="bg-white/95 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center gap-3">
-                    <span class="text-3xl">🐾</span>
-                    <a href="index.html" class="text-3xl font-black text-emerald-600 tracking-tighter">PetHaven</a>
-                </div>
-                <div class="flex items-center gap-6">
-                    <div
-                        class="hidden md:flex flex-col text-right text-gray-400 font-bold uppercase text-[10px] tracking-widest">
-                        <span>Secure Checkout</span>
-                        <span class="text-emerald-500">100% Encrypted</span>
-                    </div>
-                    <button id="cart-open-button" class="relative p-3 bg-emerald-50 rounded-2xl text-emerald-700">
-                        <span class="text-2xl">🛒</span>
-                        <span id="cart-count"
-                            class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-white">0</span>
+            <div class="flex items-center justify-between h-16 gap-4">
+                <a href="index.html" class="text-2xl font-extrabold tracking-tight"><span class="text-rose-500">My</span><span class="text-emerald-600">Petshoppy</span></a>
+                <div class="flex items-center gap-4">
+                    <a id="account-button" href="account.html" class="flex flex-col text-right text-gray-600 hover:text-emerald-600 text-sm">
+                        <span class="hidden sm:inline text-xs text-gray-400">Welcome back</span>
+                        Account
+                    </a>
+                    <button id="cart-open-button" type="button" class="relative flex items-center justify-center text-gray-600 hover:text-emerald-600" aria-label="Open cart">
+                        <span class="text-3xl" aria-hidden="true">🛒</span>
+                        <span id="cart-count" class="absolute -top-1 -right-2 bg-rose-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full">0</span>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <main id="main-content">
-        <!-- Hero Progress Banner -->
-        <section class="bg-emerald-600 py-16 relative overflow-hidden text-white">
-            <div class="absolute inset-0 opacity-10"
-                style="background: url('https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center;">
-            </div>
-            <div class="max-w-7xl mx-auto px-4 relative z-10 flex items-center gap-8">
-                <div
-                    class="w-20 h-20 rounded-3xl bg-white/20 backdrop-blur border border-white/30 flex items-center justify-center text-3xl shadow-2xl">
-                    📦</div>
-                <div>
-                    <h1 class="text-4xl font-black tracking-tighter leading-none">Order Logistics</h1>
-                    <p class="text-emerald-50 mt-2 font-medium">Finalize your acquisition and secure local delivery.</p>
+    <div class="bg-gradient-to-r from-rose-500 to-emerald-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <h1 class="text-3xl font-bold text-white">Checkout</h1>
+            <p class="text-white/90 text-sm mt-1">🔒 Secure, encrypted checkout — your data is safe.</p>
+        </div>
+    </div>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-8">
+                <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6">Shipping Information</h2>
+                    <form id="checkout-form" class="space-y-6">
+                        <div>
+                            <label for="shipping-address" class="block text-sm font-medium text-gray-700">Address</label>
+                            <input type="text" id="shipping-address" name="shippingAddress" required placeholder="Street, neighborhood..."
+                                class="mt-1 block w-full rounded-2xl border border-gray-300 px-4 py-3 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm outline-none">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="shipping-city" class="block text-sm font-medium text-gray-700">City</label>
+                                <input type="text" id="shipping-city" name="shippingCity" required
+                                    class="mt-1 block w-full rounded-2xl border border-gray-300 px-4 py-3 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm outline-none">
+                            </div>
+                            <div>
+                                <label for="shipping-phone" class="block text-sm font-medium text-gray-700">Phone number</label>
+                                <input type="tel" id="shipping-phone" name="shippingPhone" required placeholder="+237 6XX XXX XXX"
+                                    class="mt-1 block w-full rounded-2xl border border-gray-300 px-4 py-3 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm outline-none">
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-900 mb-6">Payment Method</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <input id="payment-momo" name="paymentMethod" type="radio" value="MOMO" checked class="h-4 w-4 border-gray-300 text-emerald-600 focus:ring-emerald-600">
+                                <label for="payment-momo" class="block text-sm font-medium text-gray-700">MTN Mobile Money</label>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input id="payment-orange" name="paymentMethod" type="radio" value="ORANGE_MONEY" class="h-4 w-4 border-gray-300 text-emerald-600 focus:ring-emerald-600">
+                                <label for="payment-orange" class="block text-sm font-medium text-gray-700">Orange Money</label>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input id="payment-card" name="paymentMethod" type="radio" value="CARD" class="h-4 w-4 border-gray-300 text-emerald-600 focus:ring-emerald-600">
+                                <label for="payment-card" class="block text-sm font-medium text-gray-700">Credit / Debit Card</label>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 -mt-2">You'll be redirected to a secure NotchPay payment page. For Mobile Money, the operator (MTN or Orange) is detected automatically from the phone number you use to pay.</p>
+
+                        <button type="submit" class="w-full rounded-full bg-emerald-600 py-4 text-base font-bold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-transform transform hover:-translate-y-0.5">
+                            Place Order
+                        </button>
+                        <p id="checkout-status" class="mt-2 text-center text-sm font-medium text-green-600"></p>
+                    </form>
                 </div>
             </div>
-        </section>
 
-        <!-- Checkout Grid Interface -->
-        <section class="max-w-7xl mx-auto px-4 py-20">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                <!-- Logistics Form Column -->
-                <div class="lg:col-span-8 space-y-12">
-                    <div
-                        class="bg-white rounded-[3rem] p-12 shadow-[0_20px_50px_rgba(0,0,0,0.03)] border border-gray-100">
-                        <form id="checkout-form" class="space-y-12">
-                            <!-- Shipping Module -->
-                            <div>
-                                <h2 class="text-2xl font-black text-slate-900 mb-8 flex items-center gap-4">
-                                    <span
-                                        class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm">1</span>
-                                    Shipping Destination
-                                </h2>
-                                <div class="grid grid-cols-1 gap-8">
-                                    <div class="space-y-3">
-                                        <label
-                                            class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Home
-                                            or Facility Address</label>
-                                        <input type="text" id="shipping-address" required
-                                            placeholder="Street name, building, apartment number..."
-                                            class="w-full p-5 bg-slate-50 border-none rounded-2xl text-lg font-medium outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all">
-                                    </div>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div class="space-y-3">
-                                            <label
-                                                class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">City
-                                                / Locality</label>
-                                            <input type="text" id="shipping-city" required
-                                                placeholder="Yaoundé / Douala"
-                                                class="w-full p-5 bg-slate-50 border-none rounded-2xl text-lg font-medium outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all">
-                                        </div>
-                                        <div class="space-y-3">
-                                            <label
-                                                class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Verified
-                                                Mobile Number</label>
-                                            <input type="tel" id="shipping-phone" required
-                                                placeholder="+237 6XX XXX XXX"
-                                                class="w-full p-5 bg-slate-50 border-none rounded-2xl text-lg font-medium outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-mono">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr class="border-gray-100">
-
-                            <!-- Payment Module -->
-                            <div>
-                                <h2 class="text-2xl font-black text-slate-900 mb-8 flex items-center gap-4">
-                                    <span
-                                        class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-sm">2</span>
-                                    Secured Payment Method
-                                </h2>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <label
-                                        class="relative flex flex-col p-8 border-2 border-slate-100 rounded-[2.5rem] cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/10 transition-all group">
-                                        <input type="radio" name="paymentMethod" value="MOMO" checked
-                                            class="absolute top-8 right-8 w-6 h-6 accent-emerald-600">
-                                        <span class="text-4xl mb-4">📱</span>
-                                        <span class="font-black text-xl text-slate-900">Mobile Money</span>
-                                        <span
-                                            class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">MTN
-                                            / Orange Money</span>
-                                    </label>
-                                    <label
-                                        class="relative flex flex-col p-8 border-2 border-slate-100 rounded-[2.5rem] cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/10 transition-all group">
-                                        <input type="radio" name="paymentMethod" value="CARD"
-                                            class="absolute top-8 right-8 w-6 h-6 accent-emerald-600">
-                                        <span class="text-4xl mb-4">💳</span>
-                                        <span class="font-black text-xl text-slate-900">Payment Card</span>
-                                        <span
-                                            class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">Visa
-                                            / Mastercard / Amex</span>
-                                    </label>
-                                </div>
-                                <div
-                                    class="mt-8 p-6 bg-amber-50 rounded-3xl border border-amber-100 flex items-start gap-4">
-                                    <span class="text-xl">ℹ️</span>
-                                    <p
-                                        class="text-xs font-medium text-amber-800 leading-relaxed uppercase tracking-tighter">
-                                        You will be securely redirected to the NotchPay global gateway to authorize your
-                                        transaction. For Mobile Money, the operator is detected automatically.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <button type="submit"
-                                class="w-full bg-slate-900 py-7 rounded-[2.5rem] text-white font-black text-2xl shadow-2xl hover:bg-emerald-600 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-4">
-                                🔒 Authorize Secured Payment
-                            </button>
-                            <p id="checkout-status" class="text-center font-black uppercase text-xs tracking-widest">
-                            </p>
-                        </form>
+            <div class="lg:col-span-4">
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-200 sticky top-24">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4">Order Summary</h2>
+                    <div id="checkout-items" class="space-y-4 mb-6 max-h-96 overflow-y-auto"><p class="text-sm text-gray-500">Loading items...</p></div>
+                    <hr class="border-gray-200 mb-4">
+                    <div class="mb-4">
+                        <div class="flex gap-2">
+                            <input type="text" id="coupon-input" placeholder="Coupon code" class="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-emerald-500">
+                            <button type="button" id="coupon-apply-button" class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">Apply</button>
+                        </div>
+                        <p id="coupon-status" class="mt-2 text-xs"></p>
                     </div>
-                </div>
-
-                <!-- Summary Sidebar Column -->
-                <div class="lg:col-span-4">
-                    <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100 sticky top-32">
-                        <h3
-                            class="text-2xl font-black text-slate-900 mb-8 tracking-tighter border-b border-gray-50 pb-6">
-                            Acquisition Summary</h3>
-                        <div id="checkout-items" class="space-y-8 max-h-[400px] overflow-y-auto no-scrollbar mb-10">
-                            <!-- Populated by app.js -->
-                        </div>
-                        <div class="space-y-5 border-t border-gray-100 pt-10">
-                            <div
-                                class="flex justify-between items-center text-sm font-bold text-gray-400 uppercase tracking-widest">
-                                <span>Basket Subtotal</span>
-                                <span id="subtotal-display" class="text-slate-900 font-black">0 CFA</span>
-                            </div>
-                            <div
-                                class="flex justify-between items-center text-sm font-bold text-gray-400 uppercase tracking-widest">
-                                <span>Logistics Fee</span>
-                                <span id="delivery-display" class="text-slate-900 font-black">1,500 CFA</span>
-                            </div>
-                            <div id="checkout-discount-row"
-                                class="hidden flex justify-between items-center text-sm font-black text-emerald-600 uppercase tracking-widest">
-                                <span>Applied Coupon</span>
-                                <span id="discount-display">0 CFA</span>
-                            </div>
-                            <div class="flex justify-between items-end pt-8 border-t-2 border-gray-50">
-                                <span class="text-slate-900 font-black text-xl tracking-tighter">Grand Total</span>
-                                <span id="checkout-total"
-                                    class="text-4xl font-black text-emerald-600 tracking-tighter leading-none">0
-                                    CFA</span>
-                            </div>
-                        </div>
+                    <hr class="border-gray-200 mb-4">
+                    <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                        <p>Delivery fee</p>
+                        <p id="checkout-delivery-fee">0 CFA</p>
+                    </div>
+                    <div id="checkout-discount-row" class="hidden items-center justify-between text-sm text-green-600 mb-2">
+                        <p>Discount</p>
+                        <p id="checkout-discount">- 0 CFA</p>
+                    </div>
+                    <div class="flex items-center justify-between text-base font-bold text-gray-900 mb-6 pt-2 border-t border-gray-100">
+                        <p>Total</p>
+                        <p id="checkout-total">0 CFA</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
-    <!-- Professional 4-Column Footer -->
-    <footer class="bg-slate-950 text-slate-500 pt-32 pb-12 mt-20 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-500"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-20 mb-20">
-                <div class="md:col-span-1">
-                    <h2 class="text-3xl font-black text-white tracking-tighter mb-8 italic">PetHaven</h2>
-                    <p class="text-lg leading-relaxed font-medium">The international node for elite ethical breeders and
-                        loving families.</p>
-                </div>
-                <div>
-                    <h4
-                        class="text-white font-black uppercase text-xs tracking-[0.4em] mb-10 border-l-4 border-emerald-600 pl-4">
-                        Legal</h4>
-                    <ul class="space-y-6 text-sm font-black uppercase tracking-widest">
-                        <li><a href="#" class="hover:text-emerald-400">Terms of Use</a></li>
-                        <li><a href="#" class="hover:text-emerald-400">Privacy & Data</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4
-                        class="text-white font-black uppercase text-xs tracking-[0.4em] mb-10 border-l-4 border-amber-500 pl-4">
-                        Staff</h4>
-                    <ul class="space-y-6 text-sm font-black uppercase tracking-widest">
-                        <li><button class="open-vendor-modal">Breeder Portal</button></li>
-                        <li><a href="admin.html">Admin Console</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-white/5 pt-12 text-center">
-                <p class="text-[10px] font-black uppercase tracking-[0.5em]">&copy; 2026 PetHaven Marketplace Module.
-                    End-to-End Encrypted.</p>
-            </div>
+    <aside id="cart-drawer" class="fixed inset-y-0 right-0 z-50 hidden w-full max-w-md bg-white shadow-2xl border-l border-gray-200 overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+            <div><h2 class="text-xl font-bold text-gray-900">Your cart</h2><p class="text-sm text-gray-500">Review items and checkout securely.</p></div>
+            <button id="close-cart-drawer" type="button" class="text-gray-500 hover:text-gray-900">Close</button>
         </div>
-    </footer>
-
-    <!-- Cart Drawer Infrastructure -->
-    <aside id="cart-drawer"
-        class="fixed inset-y-0 right-0 z-[1000] hidden w-full max-w-md bg-white shadow-2xl border-l border-gray-100 flex flex-col">
-        <div class="p-10 flex items-center justify-between border-b">
-            <h2 class="text-3xl font-black tracking-tighter">Your Basket</h2>
-            <button id="close-cart-drawer"
-                class="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center font-black">✕</button>
+        <div id="cart-items" class="space-y-4 p-6"><p class="text-sm text-gray-500">Your cart is empty. Add pets or supplies to get started.</p></div>
+        <div class="border-t border-gray-200 px-6 py-4">
+            <div class="flex items-center justify-between text-sm text-gray-700"><span>Total</span><span id="cart-total" class="font-semibold text-gray-900">0 CFA</span></div>
+            <button id="checkout-button" type="button" class="mt-4 w-full rounded-full bg-emerald-600 py-3 text-sm font-semibold text-white hover:bg-emerald-700 transition">Checkout</button>
         </div>
-        <div id="cart-items" class="flex-1 overflow-y-auto p-10 space-y-8 no-scrollbar"></div>
     </aside>
 
     <script src="app.js"></script>
