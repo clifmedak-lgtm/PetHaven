@@ -4,265 +4,545 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breeder Management Hub | PetHaven</title>
+    <title>Seller Dashboard - MyPetshoppy</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .v-nav-btn.active {
-            background: #10B981;
-            color: white;
-            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
-        }
-
-        .v-nav-btn {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .vendor-nav-btn { color: #64748b; }
+        .vendor-nav-btn:hover { background: #f8fafc; color: #0f172a; }
+        .vendor-nav-btn.active { background: linear-gradient(90deg, #ecfdf5, #fff1f2); color: #059669; font-weight: 600; }
+        .stat-card { transition: transform 150ms ease, box-shadow 150ms ease; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(15, 23, 42, 0.1); }
     </style>
 </head>
 
-<body data-page="vendor" class="bg-gray-50 text-slate-900 overflow-x-hidden">
-    <!-- Top Mobile Header -->
-    <div
-        class="md:hidden flex items-center justify-between bg-white border-b border-gray-100 px-6 py-4 sticky top-0 z-[100]">
-        <h1 class="text-xl font-black text-emerald-600">Breeder Hub</h1>
-        <button id="v-mobile-toggle" class="p-3 bg-gray-100 rounded-xl">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-            </svg>
-        </button>
-    </div>
+<body class="bg-slate-50">
+    <div class="min-h-screen">
+        <div class="md:hidden flex items-center justify-between bg-white/80 backdrop-blur shadow-sm px-4 py-3 sticky top-0 z-40 border-b border-slate-100">
+            <span class="text-xl font-extrabold"><span class="text-rose-500">My</span><span class="text-emerald-600">Petshoppy</span></span>
+            <button id="vendor-mobile-menu-button" aria-expanded="false" aria-controls="vendor-sidebar" class="inline-flex items-center justify-center rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-100">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
+        </div>
+        <div id="vendor-sidebar-overlay" class="hidden md:hidden fixed inset-0 bg-black/40 z-40"></div>
 
-    <div class="flex min-h-screen">
-        <!-- Enterprise Sidebar -->
-        <aside id="v-sidebar"
-            class="fixed inset-y-0 left-0 z-[200] w-80 bg-white border-r border-gray-100 p-10 transform -translate-x-full transition-transform duration-500 md:static md:translate-x-0 flex flex-col justify-between">
-            <div class="space-y-12">
-                <div class="flex items-center gap-3">
-                    <div
-                        class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-black text-xl italic">
-                        P</div>
-                    <span class="text-2xl font-black tracking-tighter">PetHaven</span>
+        <div class="flex">
+            <div id="vendor-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white p-6 min-h-screen transform -translate-x-full transition-transform duration-200 md:static md:translate-x-0 md:z-auto md:border-r md:border-slate-100">
+                <div class="flex items-center justify-between mb-10 md:justify-start md:gap-2.5 px-1">
+                    <span class="hidden md:inline text-lg font-extrabold"><span class="text-rose-500">My</span><span class="text-emerald-600">Petshoppy</span></span>
+                    <button id="vendor-sidebar-close" class="md:hidden text-slate-500 hover:text-slate-900">✕</button>
                 </div>
-                <nav class="space-y-3">
-                    <button onclick="switchView('stats')"
-                        class="v-nav-btn active w-full text-left px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-4">
-                        <span>📊</span> Performance
-                    </button>
-                    <button onclick="switchView('products')"
-                        class="v-nav-btn w-full text-left px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-4">
-                        <span>🐶</span> Inventory
-                    </button>
-                    <button onclick="switchView('orders')"
-                        class="v-nav-btn w-full text-left px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-4">
-                        <span>🧾</span> Sales Tracking
-                    </button>
+                <nav class="space-y-1">
+                    <button data-nav="stats" onclick="showSection('stats')" class="vendor-nav-btn w-full text-left px-4 py-2.5 rounded-xl flex items-center gap-3">📊 <span>Dashboard</span></button>
+                    <button data-nav="products" onclick="showSection('products')" class="vendor-nav-btn w-full text-left px-4 py-2.5 rounded-xl flex items-center gap-3">🐾 <span>My Listings</span></button>
+                    <button data-nav="orders" onclick="showSection('orders')" class="vendor-nav-btn w-full text-left px-4 py-2.5 rounded-xl flex items-center gap-3">📋 <span>Orders</span></button>
+                    <div class="pt-4 mt-4 border-t border-slate-100">
+                        <button onclick="logout()" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-red-50 text-red-600 flex items-center gap-3">🚪 <span>Logout</span></button>
+                    </div>
                 </nav>
             </div>
-            <div class="space-y-6 pt-10 border-t">
-                <button onclick="logout()"
-                    class="w-full px-6 py-4 rounded-2xl bg-rose-50 text-rose-500 font-black text-sm uppercase tracking-widest flex items-center gap-4 hover:bg-rose-500 hover:text-white transition-all">
-                    <span>🔓</span> Terminate
-                </button>
-            </div>
-        </aside>
 
-        <!-- Dynamic Content Engine -->
-        <main class="flex-1 p-8 lg:p-16">
-            <!-- View: Performance Stats -->
-            <div id="view-stats" class="animate-fade-in">
-                <div class="mb-16">
-                    <h1 class="text-5xl font-black tracking-tighter leading-none mb-3">Enterprise Dashboard</h1>
-                    <p class="text-slate-400 font-bold uppercase text-[10px] tracking-[0.5em]">Real-Time Breeder
-                        Analytics</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                    <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
-                        <p class="text-slate-400 font-black uppercase text-[10px] tracking-widest mb-4">Total Revenue
-                            Generated</p>
-                        <p id="stat-revenue" class="text-4xl font-black tracking-tighter text-slate-900">0 CFA</p>
-                        <div class="h-1 w-12 bg-emerald-500 rounded-full mt-6"></div>
+            <div class="flex-1 p-4 sm:p-6 md:p-10 min-w-0">
+                <div id="login-section" class="max-w-md mx-auto mt-8 md:mt-24">
+                    <h1 class="text-xl font-bold text-slate-900 text-center mb-6">Seller Login</h1>
+                    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm">
+                        <input type="email" id="vendor-email" placeholder="Email" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-3 outline-none focus:border-emerald-400">
+                        <input type="password" id="vendor-password" placeholder="Password" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-4 outline-none focus:border-emerald-400">
+                        <button onclick="vendorLogin()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-medium hover:bg-emerald-700">Login</button>
+                        <p class="text-sm text-slate-600 mt-4 text-center">No account? <button onclick="toggleRegister()" class="text-emerald-600 hover:underline font-medium">Register</button></p>
                     </div>
-                    <div
-                        class="bg-emerald-600 p-10 rounded-[3rem] shadow-[0_30px_60px_rgba(16,185,129,0.2)] text-white">
-                        <p class="text-emerald-100 font-black uppercase text-[10px] tracking-widest mb-4">Current Payout
-                            Balance</p>
-                        <p id="stat-balance" class="text-4xl font-black tracking-tighter">0 CFA</p>
-                        <p class="text-[9px] font-bold mt-6 opacity-60 uppercase tracking-widest">Net Share After
-                            Commission</p>
-                    </div>
-                    <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
-                        <p class="text-slate-400 font-black uppercase text-[10px] tracking-widest mb-4">Active
-                            Acquisitions</p>
-                        <p id="stat-orders" class="text-4xl font-black tracking-tighter text-slate-900">0</p>
-                        <div class="h-1 w-12 bg-amber-500 rounded-full mt-6"></div>
+                    <div id="register-form" class="hidden bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm mt-4">
+                        <h2 class="text-xl font-bold mb-6 text-slate-900">Seller Registration</h2>
+                        <input type="text" id="vendor-fullname" placeholder="Full Name" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-3 outline-none focus:border-emerald-400">
+                        <input type="text" id="vendor-business" placeholder="Business / Kennel Name" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-3 outline-none focus:border-emerald-400">
+                        <input type="email" id="vendor-email-reg" placeholder="Email" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-3 outline-none focus:border-emerald-400">
+                        <input type="password" id="vendor-password-reg" placeholder="Password" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-4 outline-none focus:border-emerald-400">
+                        <button onclick="vendorRegister()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-medium hover:bg-emerald-700">Register</button>
                     </div>
                 </div>
 
-                <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
-                        <h3 class="text-xl font-black mb-8 border-b pb-6">Payment Configuration</h3>
-                        <div class="space-y-6">
-                            <select id="momo-provider"
-                                class="w-full p-5 bg-slate-50 border-none rounded-2xl font-bold outline-none focus:ring-4 focus:ring-emerald-500/10">
-                                <option value="MTN">MTN Mobile Money</option>
-                                <option value="ORANGE">Orange Money</option>
+                <div id="dashboard" class="hidden">
+                    <div id="stats" class="hidden">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-8">Dashboard</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                            <div onclick="showSection('products')" class="stat-card bg-white p-6 rounded-2xl border border-slate-100 cursor-pointer">
+                                <p class="text-slate-500 text-sm">Listings</p><p class="text-2xl font-bold text-slate-900 mt-1" id="stat-products">0</p>
+                            </div>
+                            <div onclick="showSection('orders')" class="stat-card bg-white p-6 rounded-2xl border border-slate-100 cursor-pointer">
+                                <p class="text-slate-500 text-sm">Orders</p><p class="text-2xl font-bold text-slate-900 mt-1" id="stat-orders">0</p>
+                            </div>
+                            <div onclick="showSection('orders')" class="stat-card bg-gradient-to-br from-rose-500 to-emerald-600 p-6 rounded-2xl cursor-pointer">
+                                <p class="text-white/80 text-sm">Revenue <span id="stat-commission-note" class="text-white/70"></span></p><p class="text-2xl font-bold text-white mt-1" id="stat-revenue">0 CFA</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-100 mb-8">
+                            <p class="text-slate-500 text-sm">Available balance</p>
+                            <p class="text-2xl font-bold text-emerald-600 mt-1" id="stat-balance">0 CFA</p>
+                            <p class="text-xs text-slate-400 mt-1">Total earned minus what's already been paid out to you</p>
+                            <div class="mt-4 pt-4 border-t border-slate-100">
+                                <h4 class="text-sm font-semibold text-slate-700 mb-2">Payout history</h4>
+                                <div id="payout-history-list" class="space-y-2 text-sm text-slate-600">No payouts yet.</div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-slate-100">
+                                <h4 class="text-sm font-semibold text-slate-700 mb-2">Mobile Money account</h4>
+                                <p class="text-xs text-slate-400 mb-3">This is where the platform sends your money — make sure it's your own number.</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <select id="momo-provider" class="px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:border-emerald-400">
+                                        <option value="MTN">MTN Mobile Money</option>
+                                        <option value="ORANGE">Orange Money</option>
+                                    </select>
+                                    <input type="tel" id="momo-phone" placeholder="+237600000000" class="px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:border-emerald-400">
+                                    <button onclick="saveMomoInfo()" class="bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">Save</button>
+                                </div>
+                                <p id="momo-status" class="text-xs mt-2"></p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-lg font-bold text-slate-900 mb-4">Recent Orders</h3>
+                            <div id="orders-list" class="space-y-3">Loading...</div>
+                        </div>
+                    </div>
+
+                    <div id="products" class="hidden">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                            <h2 class="text-2xl font-bold text-slate-900">My Listings</h2>
+                            <div class="flex items-center gap-3 w-full sm:w-auto">
+                                <input type="search" id="product-search-input" placeholder="Search my listings..." class="flex-1 sm:w-64 px-4 py-2.5 border border-slate-200 rounded-xl outline-none focus:border-emerald-400">
+                                <button onclick="showAddProduct()" class="bg-emerald-600 text-white px-4 py-2.5 rounded-xl hover:bg-emerald-700 whitespace-nowrap font-medium">+ Add Listing</button>
+                            </div>
+                        </div>
+
+                        <div id="product-form" class="hidden bg-white p-6 rounded-2xl border border-slate-100 mb-8">
+                            <h3 class="text-lg font-bold mb-4 text-slate-900">Add New Listing</h3>
+                            <input type="text" id="product-name" placeholder="Name (e.g. Golden Retriever Puppy, Premium Cat Food)" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-3 outline-none focus:border-emerald-400">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                                <input type="text" id="product-breed" placeholder="Breed (for pets only — leave blank for supplies)" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl outline-none focus:border-emerald-400">
+                                <input type="text" id="product-age" placeholder="Age (e.g. 12 weeks, 2 years)" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl outline-none focus:border-emerald-400">
+                            </div>
+                            <label class="text-xs font-medium text-slate-500 mb-1 block">Full description</label>
+                            <textarea id="product-description" rows="4" placeholder="Describe the pet or product in detail..." class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-3 outline-none focus:border-emerald-400"></textarea>
+                            <label class="text-xs font-medium text-slate-500 mb-1 block">Key features — one per line</label>
+                            <textarea id="product-features" rows="3" placeholder="e.g.&#10;Vaccinated and dewormed&#10;Great with kids&#10;Comes with starter kit" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-3 outline-none focus:border-emerald-400"></textarea>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                                <input type="number" id="product-price" placeholder="Price (CFA)" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl outline-none focus:border-emerald-400">
+                                <input type="number" id="product-stock" placeholder="Quantity available" min="0" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl outline-none focus:border-emerald-400">
+                            </div>
+                            <select id="product-category" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-3 outline-none focus:border-emerald-400">
+                                <option value="dogs">Dogs</option>
+                                <option value="cats">Cats</option>
+                                <option value="small-pets">Small Pets</option>
+                                <option value="food">Food</option>
+                                <option value="toys">Toys</option>
+                                <option value="accessories">Accessories</option>
                             </select>
-                            <input type="tel" id="momo-phone" placeholder="+237 Mobile Number"
-                                class="w-full p-5 bg-slate-50 border-none rounded-2xl font-bold outline-none focus:ring-4 focus:ring-emerald-500/10">
-                            <button onclick="saveMomoInfo()"
-                                class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-emerald-600 transition-all">Update
-                                Recipient Node</button>
+
+                            <div id="product-image-dropzone" class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/30 transition mb-4" onclick="document.getElementById('product-image-file').click()">
+                                <img id="product-image-preview" src="" alt="" class="hidden mx-auto h-32 w-32 object-cover rounded-xl mb-2">
+                                <div id="product-image-placeholder">
+                                    <svg class="h-8 w-8 text-slate-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m0-3l-3-3m0 0l-3 3m3-3v11.25" /></svg>
+                                    <p class="text-sm text-slate-500 mt-2">Drag & drop a photo, or click to browse</p>
+                                </div>
+                                <p id="product-image-upload-status" class="text-xs mt-2 text-slate-500"></p>
+                            </div>
+                            <input type="file" id="product-image-file" accept="image/*" class="hidden">
+                            <input type="hidden" id="product-image">
+                            <div class="flex gap-3">
+                                <button onclick="saveProduct()" class="flex-1 bg-emerald-600 text-white py-2.5 rounded-xl font-medium hover:bg-emerald-700">Save Listing</button>
+                                <button onclick="cancelProductForm()" class="px-6 bg-slate-100 text-slate-700 py-2.5 rounded-xl hover:bg-slate-200 font-medium">Cancel</button>
+                            </div>
                         </div>
+
+                        <div id="products-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">Loading listings...</div>
                     </div>
-                    <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden">
-                        <h3 class="text-xl font-black mb-8 border-b pb-6">Logistics Activity</h3>
-                        <div id="recent-orders-list" class="space-y-4 max-h-[300px] overflow-y-auto no-scrollbar">
-                            <p class="text-slate-300 font-bold py-10 text-center uppercase tracking-widest text-xs">No
-                                Recent Sales Node</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- View: Inventory Control -->
-            <div id="view-products" class="hidden animate-fade-in">
-                <div class="flex justify-between items-center mb-12">
-                    <h2 class="text-4xl font-black tracking-tighter">My Inventory</h2>
-                    <button onclick="toggleProductModal(true)"
-                        class="bg-emerald-600 text-white px-10 py-4 rounded-[2rem] font-black shadow-xl shadow-emerald-200 hover:scale-105 active:scale-95 transition-all">
-                        + Deploy New Pet
-                    </button>
-                </div>
-                <div id="v-products-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <!-- Cards load here -->
-                </div>
-            </div>
-
-            <!-- View: Orders Interface -->
-            <div id="view-orders" class="hidden animate-fade-in">
-                <h2 class="text-4xl font-black tracking-tighter mb-12 italic">Transaction Matrix</h2>
-                <div id="v-orders-full-list" class="space-y-6"></div>
-            </div>
-        </main>
-    </div>
-
-    <!-- The Product Deployment Modal (Bulky Form) -->
-    <div id="product-modal"
-        class="hidden fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
-        <div class="bg-white w-full max-w-4xl rounded-[4rem] p-12 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-4xl font-black tracking-tighter">New Pet Deployment</h2>
-                <button onclick="toggleProductModal(false)"
-                    class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center font-black hover:bg-rose-50 hover:text-rose-500 transition-all">✕</button>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Image Sub-Module -->
-                <div class="space-y-6">
-                    <div
-                        class="relative group aspect-square bg-slate-50 border-4 border-dashed border-emerald-100 rounded-[3rem] overflow-hidden flex items-center justify-center">
-                        <img id="modal-p-preview" class="hidden w-full h-full object-cover">
-                        <div id="modal-p-placeholder" class="text-center p-10">
-                            <span class="text-6xl mb-4 block">📸</span>
-                            <p class="text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-none">
-                                Pet Visualization Required</p>
-                        </div>
-                        <input type="file" id="modal-p-file" accept="image/*"
-                            class="absolute inset-0 opacity-0 cursor-pointer">
-                    </div>
-                    <p id="modal-p-status"
-                        class="text-center font-black text-[10px] text-slate-400 uppercase tracking-[0.2em]"></p>
-                </div>
-
-                <!-- Attributes Sub-Module -->
-                <div class="space-y-6">
-                    <input type="text" id="modal-p-name" placeholder="Full Breed / Item Name"
-                        class="w-full p-6 bg-slate-50 border-none rounded-3xl text-xl font-bold outline-none focus:ring-4 focus:ring-emerald-500/10">
-                    <div class="grid grid-cols-2 gap-4">
-                        <select id="modal-p-category"
-                            class="p-6 bg-slate-50 border-none rounded-3xl font-black uppercase text-xs tracking-widest outline-none">
-                            <option value="dogs">Dogs / Puppies</option>
-                            <option value="cats">Cats / Kittens</option>
-                            <option value="birds">Birds</option>
-                            <option value="food">Nutrition</option>
-                            <option value="accessories">Equipment</option>
-                        </select>
-                        <input type="text" id="modal-p-breed" placeholder="Specific Breed"
-                            class="p-6 bg-slate-50 border-none rounded-3xl font-bold outline-none">
-                    </div>
-                    <textarea id="modal-p-desc"
-                        placeholder="Comprehensive health history, vaccinations, behavior, and personality traits..."
-                        class="w-full p-6 bg-slate-50 border-none rounded-3xl h-48 outline-none focus:ring-4 focus:ring-emerald-500/10 text-lg"></textarea>
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Market
-                                Price (CFA)</label>
-                            <input type="number" id="modal-p-price"
-                                class="w-full p-6 bg-slate-50 border-none rounded-3xl font-black text-2xl text-emerald-600 outline-none">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Units in
-                                Inventory</label>
-                            <input type="number" id="modal-p-stock" value="1"
-                                class="w-full p-6 bg-slate-50 border-none rounded-3xl font-black text-2xl outline-none">
-                        </div>
+                    <div id="orders" class="hidden">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-8">Orders</h2>
+                        <div id="vendor-orders-list" class="space-y-4">Loading orders...</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="mt-12 flex gap-6">
-                <button onclick="executeProductListing()"
-                    class="flex-1 bg-emerald-600 text-white py-7 rounded-[2.5rem] font-black text-2xl shadow-2xl shadow-emerald-200 hover:scale-[1.02] transition-all">
-                    Finalize Deployment
-                </button>
             </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
     <script>
-        let currentUploadUrl = "";
-        function switchView(view) {
-            document.querySelectorAll('#view-stats, #view-products, #view-orders').forEach(v => v.classList.add('hidden'));
-            document.getElementById(`view-${view}`).classList.remove('hidden');
+        const API_URL = window.location.origin;
+
+        function authHeaders(json = false) {
+            const token = localStorage.getItem('vendor-token');
+            const headers = {};
+            if (json) headers['Content-Type'] = 'application/json';
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            return headers;
         }
 
-        document.getElementById('modal-p-file').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            const status = document.getElementById('modal-p-status');
-            status.textContent = "Processing Bio-Image Data...";
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            try { return await fetch(url, { ...options, signal: controller.signal }); }
+            catch (err) {
+                if (err.name === 'AbortError') throw new Error('The server took too long to respond. It may be waking up — try again in a few seconds.');
+                throw new Error('Could not reach the server. Check your connection and try again.');
+            } finally { clearTimeout(timer); }
+        }
+
+        function showLoadError(elementId, err) {
+            const el = document.getElementById(elementId);
+            if (el) el.innerHTML = `<p class="text-red-600 bg-red-50 border border-red-100 rounded-xl p-3 text-sm">⚠️ ${err.message || 'Something went wrong.'} <button onclick="location.reload()" class="underline font-medium">Retry</button></p>`;
+        }
+
+        async function readJson(res) {
+            const text = await res.text();
+            try { return text ? JSON.parse(text) : {}; } catch { return { message: text || `Server returned ${res.status}` }; }
+        }
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function pill(text, color) { return `<span class="text-xs font-medium px-2.5 py-1 rounded-full bg-${color}-50 text-${color}-700">${text}</span>`; }
+
+        function showSection(section) {
+            document.querySelectorAll('#stats, #products, #orders').forEach(el => el.classList.add('hidden'));
+            document.getElementById(section)?.classList.remove('hidden');
+            document.querySelectorAll('.vendor-nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.nav === section));
+            if (section === 'stats') loadStats();
+            if (section === 'products') loadProducts();
+            if (section === 'orders') loadOrders();
+            closeVendorSidebar();
+        }
+
+        function openVendorSidebar() {
+            document.getElementById('vendor-sidebar')?.classList.remove('-translate-x-full');
+            document.getElementById('vendor-sidebar-overlay')?.classList.remove('hidden');
+        }
+        function closeVendorSidebar() {
+            document.getElementById('vendor-sidebar')?.classList.add('-translate-x-full');
+            document.getElementById('vendor-sidebar-overlay')?.classList.add('hidden');
+        }
+
+        async function vendorLogin() {
+            const email = document.getElementById('vendor-email').value;
+            const password = document.getElementById('vendor-password').value;
             try {
-                currentUploadUrl = await uploadPetImage(file); // From app.js
-                const preview = document.getElementById('modal-p-preview');
-                preview.src = currentUploadUrl;
-                preview.classList.remove('hidden');
-                document.getElementById('modal-p-placeholder').classList.add('hidden');
-                status.textContent = "Data Ready ✓";
-                status.className = "text-center font-black text-[10px] text-emerald-500 uppercase tracking-[0.2em]";
-            } catch (err) { status.textContent = "Logic Fault during Upload"; }
-        });
-
-        async function executeProductListing() {
-            const data = {
-                name: document.getElementById('modal-p-name').value,
-                category: document.getElementById('modal-p-category').value,
-                breed: document.getElementById('modal-p-breed').value,
-                description: document.getElementById('modal-p-desc').value,
-                price: document.getElementById('modal-p-price').value,
-                stock: document.getElementById('modal-p-stock').value,
-                image: currentUploadUrl
-            };
-            if (!data.image) return alert("Pet Image Data Required.");
-            await performPetHavenRequest('/api/vendor/products', { method: 'POST', body: JSON.stringify(data) });
-            location.reload();
+                const res = await fetch(`${API_URL}/api/vendor/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+                const data = await readJson(res);
+                if (!res.ok) throw new Error(data.message || `Request failed (${res.status})`);
+                if (data.token) {
+                    localStorage.setItem('vendor-token', data.token);
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    showSection('stats');
+                } else alert(data.message || 'Login failed');
+            } catch (err) { alert('Login error: ' + err.message); }
         }
+
+        async function vendorRegister() {
+            const fullName = document.getElementById('vendor-fullname').value;
+            const businessName = document.getElementById('vendor-business').value;
+            const email = document.getElementById('vendor-email-reg').value;
+            const password = document.getElementById('vendor-password-reg').value;
+            try {
+                const res = await fetch(`${API_URL}/api/vendor/auth/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fullName, businessName, email, password }) });
+                const data = await readJson(res);
+                if (!res.ok) throw new Error(data.message || `Request failed (${res.status})`);
+                if (data.token) {
+                    localStorage.setItem('vendor-token', data.token);
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    showSection('stats');
+                } else alert(data.message || 'Registration failed');
+            } catch (err) { alert('Registration error: ' + err.message); }
+        }
+
+        async function loadMomoInfo() {
+            try {
+                const res = await fetch(`${API_URL}/api/vendor/momo`, { headers: authHeaders() });
+                const data = await readJson(res);
+                if (res.ok) {
+                    if (data.momoProvider) document.getElementById('momo-provider').value = data.momoProvider;
+                    if (data.momoPhone) document.getElementById('momo-phone').value = data.momoPhone;
+                }
+            } catch (err) { /* non-critical */ }
+        }
+
+        async function saveMomoInfo() {
+            const status = document.getElementById('momo-status');
+            const body = { momoProvider: document.getElementById('momo-provider').value, momoPhone: document.getElementById('momo-phone').value };
+            try {
+                const res = await fetch(`${API_URL}/api/vendor/momo`, { method: 'PUT', headers: authHeaders(true), body: JSON.stringify(body) });
+                const data = await readJson(res);
+                if (!res.ok) throw new Error(data.message || 'Failed to save');
+                status.textContent = 'Saved!'; status.className = 'text-xs mt-2 text-emerald-600';
+            } catch (err) { status.textContent = err.message; status.className = 'text-xs mt-2 text-red-600'; }
+        }
+
+        async function loadStats() {
+            loadMomoInfo();
+            try {
+                const res = await fetchWithTimeout(`${API_URL}/api/vendor/stats`, { headers: authHeaders() });
+                const data = await readJson(res);
+                if (!res.ok) throw new Error(data.message || `Request failed (${res.status})`);
+                document.getElementById('stat-products').textContent = data.productCount || 0;
+                document.getElementById('stat-orders').textContent = data.orderCount || 0;
+                document.getElementById('stat-revenue').textContent = (data.totalRevenue || 0).toLocaleString() + ' CFA';
+                document.getElementById('stat-commission-note').textContent = data.commissionRatePercent !== undefined ? `(after ${data.commissionRatePercent}% platform fee)` : '';
+                document.getElementById('stat-balance').textContent = (data.availableBalance || 0).toLocaleString() + ' CFA';
+
+                const payoutHtml = (data.payouts || []).map(p => `
+                    <div class="flex justify-between border-b border-slate-100 pb-2">
+                        <span>${new Date(p.createdAt).toLocaleDateString()} — ${p.method || 'Payment'}${p.reference ? ` (${escapeHtml(p.reference)})` : ''}</span>
+                        <span class="font-semibold text-slate-900">${Number(p.amount).toLocaleString()} CFA</span>
+                    </div>`).join('');
+                document.getElementById('payout-history-list').innerHTML = payoutHtml || 'No payouts yet.';
+
+                const ordersList = (data.orders || []).map(o => `
+                    <div class="p-4 bg-slate-50 rounded-xl flex justify-between items-center">
+                        <div><p class="font-medium text-slate-900">${o.customerName}</p><p class="text-xs text-slate-500">${new Date(o.createdAt).toLocaleDateString()}</p></div>
+                        <div class="text-right"><p class="font-semibold text-slate-900">${Number(o.vendorAmount || 0).toLocaleString()} CFA</p>${pill(o.status, o.status === 'DELIVERED' ? 'emerald' : o.status === 'CANCELLED' ? 'red' : 'blue')}</div>
+                    </div>`).join('');
+                document.getElementById('orders-list').innerHTML = ordersList || '<p class="text-slate-500">No orders yet</p>';
+            } catch (err) {
+                console.error('Stats error:', err);
+                showLoadError('orders-list', err);
+                document.getElementById('stat-products').textContent = '—';
+                document.getElementById('stat-orders').textContent = '—';
+                document.getElementById('stat-revenue').textContent = '—';
+            }
+        }
+
+        async function loadProducts() {
+            const search = document.getElementById('product-search-input')?.value || '';
+            try {
+                const url = `${API_URL}/api/vendor/products${search ? `?search=${encodeURIComponent(search)}` : ''}`;
+                const res = await fetchWithTimeout(url, { headers: authHeaders() });
+                const products = await readJson(res);
+                if (!res.ok) throw new Error(products.message || `Request failed (${res.status})`);
+                const html = (products || []).map(p => `
+    <div class="product-card bg-white p-4 rounded-2xl border border-slate-100 hover:shadow-md transition cursor-pointer" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-description="${escapeHtml(p.description)}" data-features="${escapeHtml(JSON.stringify(p.features || []))}" data-breed="${escapeHtml(p.breed || '')}" data-age="${escapeHtml(p.age || '')}" data-price="${p.price}" data-category="${p.category}" data-image="${escapeHtml(p.image)}" data-stock="${p.stock ?? 1}" onclick="showProductDetail('${p.id}')">
+        <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.style.display='none'">
+        <h4 class="font-bold text-slate-900">${escapeHtml(p.name)}</h4>
+        <p class="text-sm text-slate-600">${Number(p.price || 0).toLocaleString()} CFA</p>
+        <div class="mt-2">${p.stock > 0 ? pill(`${p.stock} available`, 'emerald') : pill('Sold out', 'red')}</div>
+        <div class="flex gap-2 mt-3" onclick="event.stopPropagation()">
+            <button onclick="editProduct('${p.id}')" class="flex-1 bg-blue-50 text-blue-700 py-1.5 rounded-lg text-sm hover:bg-blue-100 font-medium">Edit</button>
+            <button onclick="deleteProduct('${p.id}')" class="flex-1 bg-red-50 text-red-600 py-1.5 rounded-lg text-sm hover:bg-red-100 font-medium">Delete</button>
+        </div>
+    </div>`).join('');
+                document.getElementById('products-list').innerHTML = html || '<p class="col-span-full text-slate-500">No listings match your search.</p>';
+            } catch (err) { console.error('Products error:', err); showLoadError('products-list', err); }
+        }
+
+        const ORDER_STATUSES = ['PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+        const STATUS_LABELS = { PENDING_PAYMENT: 'Awaiting payment', PROCESSING: 'Processing', SHIPPED: 'Shipped', DELIVERED: 'Delivered', CANCELLED: 'Cancelled' };
+        const STATUS_COLORS = { PENDING_PAYMENT: 'bg-slate-100 text-slate-700', PROCESSING: 'bg-blue-100 text-blue-700', SHIPPED: 'bg-amber-100 text-amber-700', DELIVERED: 'bg-emerald-100 text-emerald-700', CANCELLED: 'bg-red-100 text-red-700' };
+
+        function renderOrderCard(o) {
+            const itemsHtml = (o.items || []).map(i => `<div class="flex justify-between text-sm text-slate-700 py-1"><span>${escapeHtml(i.productName)} <span class="text-slate-400">x${i.quantity}</span></span><span>${Number((i.price || 0) * i.quantity).toLocaleString()} CFA</span></div>`).join('');
+            const statusOptions = ORDER_STATUSES.map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${STATUS_LABELS[s]}</option>`).join('');
+            return `
+                <div class="p-5 bg-white rounded-2xl border border-slate-100" data-order-id="${o.id}">
+                    <div class="flex flex-wrap items-start justify-between gap-3 mb-2">
+                        <div><p class="font-bold text-slate-900">Order #${o.id.slice(0, 10)}...</p><p class="text-sm text-slate-500">${escapeHtml(o.customerName)} — ${new Date(o.createdAt).toLocaleDateString()}</p></div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full ${STATUS_COLORS[o.status] || 'bg-slate-100 text-slate-700'}">${STATUS_LABELS[o.status] || o.status}</span>
+                    </div>
+                    <div class="border-t border-b border-slate-100 py-2 my-2">${itemsHtml}</div>
+                    <p class="text-sm text-slate-600">📍 ${escapeHtml(o.shippingAddress)}, ${escapeHtml(o.shippingCity)} — ${escapeHtml(o.shippingPhone)}</p>
+                    <div class="flex items-center justify-between mt-3 gap-3">
+                        <p class="font-bold text-slate-900">${Number(o.totalAmount || 0).toLocaleString()} CFA</p>
+                        ${o.status === 'PENDING_PAYMENT' ? '<span class="text-xs text-slate-400">Waiting for customer payment</span>' : `<select onchange="updateOrderStatus('${o.id}', this.value)" class="border border-slate-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-emerald-400">${statusOptions}</select>`}
+                    </div>
+                </div>`;
+        }
+
+        async function loadOrders() {
+            loadStats();
+            try {
+                const res = await fetch(`${API_URL}/api/vendor/stats`, { headers: authHeaders() });
+                const data = await readJson(res);
+                if (!res.ok) throw new Error(data.message || `Request failed (${res.status})`);
+                const html = (data.orders || []).map(renderOrderCard).join('');
+                document.getElementById('vendor-orders-list').innerHTML = html || '<p class="text-slate-500 bg-white p-6 rounded-2xl border border-slate-100">No orders yet</p>';
+            } catch (err) { console.error('Orders error:', err); showLoadError('vendor-orders-list', err); }
+        }
+
+        async function updateOrderStatus(orderId, status) {
+            try {
+                const res = await fetch(`${API_URL}/api/vendor/orders/${orderId}/status`, { method: 'PUT', headers: authHeaders(true), body: JSON.stringify({ status }) });
+                const data = await readJson(res);
+                if (!res.ok) throw new Error(data.message || `Request failed (${res.status})`);
+                loadOrders();
+            } catch (err) { alert('Unable to update status: ' + err.message); loadOrders(); }
+        }
+
+        function showAddProduct() { document.getElementById('product-form').classList.remove('hidden'); }
+
+        function cancelProductForm() {
+            const form = document.getElementById('product-form');
+            form.classList.add('hidden'); form.dataset.editId = '';
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-breed').value = '';
+            document.getElementById('product-age').value = '';
+            document.getElementById('product-description').value = '';
+            document.getElementById('product-features').value = '';
+            document.getElementById('product-price').value = '';
+            document.getElementById('product-stock').value = '';
+            document.getElementById('product-category').selectedIndex = 0;
+            document.getElementById('product-image').value = '';
+            resetImagePreview();
+        }
+
+        function resetImagePreview() {
+            const preview = document.getElementById('product-image-preview');
+            preview.src = ''; preview.classList.add('hidden');
+            document.getElementById('product-image-placeholder').classList.remove('hidden');
+            document.getElementById('product-image-upload-status').textContent = '';
+        }
+
+        function setImagePreview(url) {
+            const preview = document.getElementById('product-image-preview');
+            preview.src = url; preview.classList.remove('hidden');
+            document.getElementById('product-image-placeholder').classList.add('hidden');
+        }
+
+        async function handleImageFile(file) {
+            if (!file || !file.type.startsWith('image/')) { alert('Please choose an image file.'); return; }
+            const status = document.getElementById('product-image-upload-status');
+            const localPreviewUrl = URL.createObjectURL(file);
+            setImagePreview(localPreviewUrl);
+            status.textContent = 'Uploading...'; status.className = 'text-xs mt-2 text-blue-600';
+            try {
+                const dataUrl = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = () => reject(new Error('Unable to read file'));
+                    reader.readAsDataURL(file);
+                });
+                const res = await fetch(`${API_URL}/api/upload/image`, { method: 'POST', headers: authHeaders(true), body: JSON.stringify({ image: dataUrl }) });
+                const data = await readJson(res);
+                if (!res.ok) throw new Error(data.message || 'Upload failed');
+                document.getElementById('product-image').value = data.url;
+                setImagePreview(data.url);
+                status.textContent = 'Image uploaded ✓'; status.className = 'text-xs mt-2 text-emerald-600';
+            } catch (err) { status.textContent = err.message || 'Upload failed. Try again.'; status.className = 'text-xs mt-2 text-red-600'; }
+        }
+
+        async function saveProduct() {
+            const editId = document.getElementById('product-form').dataset.editId;
+            const product = {
+                name: document.getElementById('product-name').value,
+                breed: document.getElementById('product-breed').value,
+                age: document.getElementById('product-age').value,
+                description: document.getElementById('product-description').value,
+                features: document.getElementById('product-features').value.split('\n').map(f => f.trim()).filter(Boolean),
+                price: parseInt(document.getElementById('product-price').value),
+                category: document.getElementById('product-category').value,
+                image: document.getElementById('product-image').value,
+                stock: document.getElementById('product-stock').value ? parseInt(document.getElementById('product-stock').value) : undefined
+            };
+            try {
+                const method = editId ? 'PUT' : 'POST';
+                const url = editId ? `/api/vendor/products/${editId}` : '/api/vendor/products';
+                const res = await fetch(`${API_URL}${url}`, { method, headers: authHeaders(true), body: JSON.stringify(product) });
+                const data = await readJson(res);
+                if (!res.ok) throw new Error(data.message || `Request failed (${res.status})`);
+                if (data.success) { cancelProductForm(); loadProducts(); } else alert(data.message || 'Failed to save');
+            } catch (err) { alert('Error: ' + err.message); }
+        }
+
+        function showProductDetail(id) {
+            const card = document.querySelector(`[data-id="${id}"]`);
+            if (!card) return;
+            document.getElementById('detail-modal-image').src = card.dataset.image || '';
+            document.getElementById('detail-modal-image').onerror = function () { this.style.display = 'none'; };
+            document.getElementById('detail-modal-name').textContent = card.dataset.name;
+            document.getElementById('detail-modal-category').textContent = card.dataset.category;
+            document.getElementById('detail-modal-price').textContent = Number(card.dataset.price || 0).toLocaleString() + ' CFA';
+            document.getElementById('detail-modal-stock').textContent = card.dataset.stock > 0 ? `${card.dataset.stock} available` : 'Sold out';
+            document.getElementById('detail-modal-description').textContent = card.dataset.description || 'No description provided.';
+            const features = JSON.parse(card.dataset.features || '[]');
+            document.getElementById('detail-modal-features').innerHTML = features.length ? features.map(f => `<li>${escapeHtml(f)}</li>`).join('') : '';
+            document.getElementById('detail-modal-edit').onclick = () => { closeProductDetail(); editProduct(id); };
+            document.getElementById('detail-modal-delete').onclick = () => { closeProductDetail(); deleteProduct(id); };
+            document.getElementById('product-detail-modal').classList.remove('hidden');
+        }
+        function closeProductDetail() { document.getElementById('product-detail-modal').classList.add('hidden'); }
+
+        function editProduct(id) {
+            const product = document.querySelector(`[data-id="${id}"]`);
+            if (!product) return;
+            document.getElementById('product-name').value = product.dataset.name;
+            document.getElementById('product-breed').value = product.dataset.breed;
+            document.getElementById('product-age').value = product.dataset.age;
+            document.getElementById('product-description').value = product.dataset.description;
+            document.getElementById('product-features').value = (JSON.parse(product.dataset.features || '[]')).join('\n');
+            document.getElementById('product-price').value = product.dataset.price;
+            document.getElementById('product-stock').value = product.dataset.stock;
+            document.getElementById('product-category').value = product.dataset.category;
+            document.getElementById('product-image').value = product.dataset.image;
+            if (product.dataset.image) setImagePreview(product.dataset.image); else resetImagePreview();
+            document.getElementById('product-form').dataset.editId = id;
+            document.getElementById('product-form').classList.remove('hidden');
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Delete this listing?')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/vendor/products/${id}`, { method: 'DELETE', headers: authHeaders() });
+                const data = await readJson(res);
+                if (!res.ok) throw new Error(data.message || `Request failed (${res.status})`);
+                if (data.success) loadProducts(); else alert(data.message || 'Failed to delete');
+            } catch (err) { alert('Delete error: ' + err.message); }
+        }
+
+        function toggleRegister() { document.getElementById('register-form').classList.toggle('hidden'); }
+        function logout() { localStorage.removeItem('vendor-token'); location.reload(); }
+
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('vendor-token');
+            if (token) {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                showSection('stats');
+            }
+            let searchDebounce = null;
+            document.getElementById('product-search-input')?.addEventListener('input', () => { clearTimeout(searchDebounce); searchDebounce = setTimeout(loadProducts, 250); });
+            document.getElementById('vendor-mobile-menu-button')?.addEventListener('click', openVendorSidebar);
+            document.getElementById('vendor-sidebar-close')?.addEventListener('click', closeVendorSidebar);
+            document.getElementById('vendor-sidebar-overlay')?.addEventListener('click', closeVendorSidebar);
+
+            const dropzone = document.getElementById('product-image-dropzone');
+            const fileInput = document.getElementById('product-image-file');
+            fileInput?.addEventListener('change', (e) => { if (e.target.files[0]) handleImageFile(e.target.files[0]); });
+            dropzone?.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('border-emerald-400', 'bg-emerald-50/30'); });
+            dropzone?.addEventListener('dragleave', () => dropzone.classList.remove('border-emerald-400', 'bg-emerald-50/30'));
+            dropzone?.addEventListener('drop', (e) => { e.preventDefault(); dropzone.classList.remove('border-emerald-400', 'bg-emerald-50/30'); if (e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]); });
+        });
     </script>
+
+    <div id="product-detail-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50" onclick="closeProductDetail()"></div>
+        <div class="relative bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <button onclick="closeProductDetail()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-900 text-xl">✕</button>
+            <img id="detail-modal-image" src="" alt="" class="w-full h-56 object-cover rounded-t-2xl">
+            <div class="p-6">
+                <p id="detail-modal-category" class="text-xs uppercase tracking-wide text-emerald-600 font-semibold mb-1"></p>
+                <h3 id="detail-modal-name" class="text-xl font-bold text-slate-900 mb-2"></h3>
+                <div class="flex items-center gap-3 mb-4">
+                    <span id="detail-modal-price" class="text-lg font-bold text-slate-900"></span>
+                    <span id="detail-modal-stock" class="text-sm text-slate-500"></span>
+                </div>
+                <ul id="detail-modal-features" class="list-disc list-inside text-sm text-slate-700 space-y-1 mb-3"></ul>
+                <p id="detail-modal-description" class="text-sm text-slate-600 leading-relaxed"></p>
+                <div class="flex gap-3 mt-6">
+                    <button id="detail-modal-edit" class="flex-1 bg-emerald-600 text-white py-2 rounded-xl font-medium hover:bg-emerald-700">Edit listing</button>
+                    <button id="detail-modal-delete" class="flex-1 bg-red-50 text-red-600 py-2 rounded-xl font-medium hover:bg-red-100">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
